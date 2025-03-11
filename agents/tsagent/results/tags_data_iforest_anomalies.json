@@ -1,0 +1,1228 @@
+{
+  "dataset_name": "tags_data",
+  "method": "Isolation Forest",
+  "parameters": {
+    "contamination": 0.01,
+    "n_estimators": 100
+  },
+  "results": {
+    "tag4": {
+      "anomaly_count": 1369,
+      "anomaly_percentage": 0.9193596045880678,
+      "anomaly_regions": [
+        {
+          "start_idx": 87679,
+          "end_idx": 87682,
+          "start_time": "2022-06-01 08:35:00",
+          "end_time": "2022-06-01 08:50:00",
+          "duration": "0 days 00:15:00",
+          "mean_score": 0.056468580163369975,
+          "mean_value": 0.0,
+          "point_count": 4
+        },
+        {
+          "start_idx": 94273,
+          "end_idx": 94298,
+          "start_time": "2022-06-24 06:05:00",
+          "end_time": "2022-06-24 08:10:00",
+          "duration": "0 days 02:05:00",
+          "mean_score": 0.05560355603373958,
+          "mean_value": 0.00022882852761897305,
+          "point_count": 26
+        },
+        {
+          "start_idx": 94312,
+          "end_idx": 94317,
+          "start_time": "2022-06-24 09:20:00",
+          "end_time": "2022-06-24 09:45:00",
+          "duration": "0 days 00:25:00",
+          "mean_score": 0.048373537394488,
+          "mean_value": 0.0025008116065857668,
+          "point_count": 6
+        },
+        {
+          "start_idx": 99675,
+          "end_idx": 99777,
+          "start_time": "2022-07-13 00:15:00",
+          "end_time": "2022-07-13 08:45:00",
+          "duration": "0 days 08:30:00",
+          "mean_score": 0.0017989479827069579,
+          "mean_value": 0.014791491607439061,
+          "point_count": 103
+        },
+        {
+          "start_idx": 99780,
+          "end_idx": 99795,
+          "start_time": "2022-07-13 09:00:00",
+          "end_time": "2022-07-13 10:15:00",
+          "duration": "0 days 01:15:00",
+          "mean_score": 0.0014581926154002695,
+          "mean_value": 0.014784993094978237,
+          "point_count": 16
+        },
+        {
+          "start_idx": 99797,
+          "end_idx": 99822,
+          "start_time": "2022-07-13 10:25:00",
+          "end_time": "2022-07-13 12:30:00",
+          "duration": "0 days 02:05:00",
+          "mean_score": 0.006277493521409669,
+          "mean_value": 0.014833191200754721,
+          "point_count": 26
+        },
+        {
+          "start_idx": 99825,
+          "end_idx": 99835,
+          "start_time": "2022-07-13 12:45:00",
+          "end_time": "2022-07-13 13:35:00",
+          "duration": "0 days 00:50:00",
+          "mean_score": 0.0016121275927174696,
+          "mean_value": 0.014790895183654583,
+          "point_count": 11
+        },
+        {
+          "start_idx": 99842,
+          "end_idx": 99903,
+          "start_time": "2022-07-13 14:10:00",
+          "end_time": "2022-07-13 19:15:00",
+          "duration": "0 days 05:05:00",
+          "mean_score": 0.0015052973035039052,
+          "mean_value": 0.014785292282004934,
+          "point_count": 62
+        },
+        {
+          "start_idx": 99908,
+          "end_idx": 99909,
+          "start_time": "2022-07-13 19:40:00",
+          "end_time": "2022-07-13 19:45:00",
+          "duration": "0 days 00:05:00",
+          "mean_score": 0.0004662365091052667,
+          "mean_value": 0.0147743853682653,
+          "point_count": 2
+        },
+        {
+          "start_idx": 99917,
+          "end_idx": 99964,
+          "start_time": "2022-07-13 20:25:00",
+          "end_time": "2022-07-14 00:20:00",
+          "duration": "0 days 03:55:00",
+          "mean_score": 0.0018475454676791746,
+          "mean_value": 0.014792875502913612,
+          "point_count": 48
+        },
+        {
+          "start_idx": 99967,
+          "end_idx": 100249,
+          "start_time": "2022-07-14 00:35:00",
+          "end_time": "2022-07-15 00:05:00",
+          "duration": "0 days 23:30:00",
+          "mean_score": 0.015367606822451562,
+          "mean_value": 0.014929029215345061,
+          "point_count": 283
+        },
+        {
+          "start_idx": 100251,
+          "end_idx": 100261,
+          "start_time": "2022-07-15 00:15:00",
+          "end_time": "2022-07-15 01:05:00",
+          "duration": "0 days 00:50:00",
+          "mean_score": 0.0013575872743503742,
+          "mean_value": 0.01478591414153182,
+          "point_count": 11
+        },
+        {
+          "start_idx": 100265,
+          "end_idx": 100267,
+          "start_time": "2022-07-15 01:25:00",
+          "end_time": "2022-07-15 01:35:00",
+          "duration": "0 days 00:10:00",
+          "mean_score": 0.0004662365091052667,
+          "mean_value": 0.014774936422192636,
+          "point_count": 3
+        },
+        {
+          "start_idx": 100274,
+          "end_idx": 100274,
+          "start_time": "2022-07-15 02:10:00",
+          "end_time": "2022-07-15 02:10:00",
+          "duration": "0 days 00:00:00",
+          "mean_score": 0.0004662365091052667,
+          "mean_value": 0.0147726928938403,
+          "point_count": 1
+        },
+        {
+          "start_idx": 100285,
+          "end_idx": 100289,
+          "start_time": "2022-07-15 03:05:00",
+          "end_time": "2022-07-15 03:25:00",
+          "duration": "0 days 00:20:00",
+          "mean_score": 0.0004662365091052667,
+          "mean_value": 0.0147730024108751,
+          "point_count": 5
+        },
+        {
+          "start_idx": 100291,
+          "end_idx": 100291,
+          "start_time": "2022-07-15 03:35:00",
+          "end_time": "2022-07-15 03:35:00",
+          "duration": "0 days 00:00:00",
+          "mean_score": 0.0004662365091052667,
+          "mean_value": 0.0147726220461328,
+          "point_count": 1
+        },
+        {
+          "start_idx": 100296,
+          "end_idx": 100296,
+          "start_time": "2022-07-15 04:00:00",
+          "end_time": "2022-07-15 04:00:00",
+          "duration": "0 days 00:00:00",
+          "mean_score": 0.0004662365091052667,
+          "mean_value": 0.0147735681657682,
+          "point_count": 1
+        },
+        {
+          "start_idx": 100300,
+          "end_idx": 100301,
+          "start_time": "2022-07-15 04:20:00",
+          "end_time": "2022-07-15 04:25:00",
+          "duration": "0 days 00:05:00",
+          "mean_score": 0.0009329464589671321,
+          "mean_value": 0.014775963077564649,
+          "point_count": 2
+        },
+        {
+          "start_idx": 100303,
+          "end_idx": 100303,
+          "start_time": "2022-07-15 04:35:00",
+          "end_time": "2022-07-15 04:35:00",
+          "duration": "0 days 00:00:00",
+          "mean_score": 0.0004662365091052667,
+          "mean_value": 0.0147737333756274,
+          "point_count": 1
+        },
+        {
+          "start_idx": 100305,
+          "end_idx": 100305,
+          "start_time": "2022-07-15 04:45:00",
+          "end_time": "2022-07-15 04:45:00",
+          "duration": "0 days 00:00:00",
+          "mean_score": 0.0004662365091052667,
+          "mean_value": 0.0147726350209513,
+          "point_count": 1
+        },
+        {
+          "start_idx": 100316,
+          "end_idx": 100341,
+          "start_time": "2022-07-15 05:40:00",
+          "end_time": "2022-07-15 07:45:00",
+          "duration": "0 days 02:05:00",
+          "mean_score": 0.0013818822188173241,
+          "mean_value": 0.014782249949929473,
+          "point_count": 26
+        },
+        {
+          "start_idx": 100343,
+          "end_idx": 100343,
+          "start_time": "2022-07-15 07:55:00",
+          "end_time": "2022-07-15 07:55:00",
+          "duration": "0 days 00:00:00",
+          "mean_score": 0.0013996564088289976,
+          "mean_value": 0.0147788389455184,
+          "point_count": 1
+        },
+        {
+          "start_idx": 128311,
+          "end_idx": 128311,
+          "start_time": "2022-10-20 10:35:00",
+          "end_time": "2022-10-20 10:35:00",
+          "duration": "0 days 00:00:00",
+          "mean_score": 0.04894256469079117,
+          "mean_value": 0.0026934517126868,
+          "point_count": 1
+        },
+        {
+          "start_idx": 144290,
+          "end_idx": 144291,
+          "start_time": "2022-12-14 22:10:00",
+          "end_time": "2022-12-14 22:15:00",
+          "duration": "0 days 00:05:00",
+          "mean_score": 0.000261363176304763,
+          "mean_value": 0.0044970658392081,
+          "point_count": 2
+        },
+        {
+          "start_idx": 144297,
+          "end_idx": 144742,
+          "start_time": "2022-12-14 22:45:00",
+          "end_time": "2022-12-16 11:50:00",
+          "duration": "1 days 13:05:00",
+          "mean_score": 0.015751448093527805,
+          "mean_value": 0.004322138958553817,
+          "point_count": 446
+        },
+        {
+          "start_idx": 144744,
+          "end_idx": 144746,
+          "start_time": "2022-12-16 12:00:00",
+          "end_time": "2022-12-16 12:10:00",
+          "duration": "0 days 00:10:00",
+          "mean_score": 0.0004944909859208035,
+          "mean_value": 0.0044955129146584,
+          "point_count": 3
+        },
+        {
+          "start_idx": 144864,
+          "end_idx": 145064,
+          "start_time": "2022-12-16 22:00:00",
+          "end_time": "2022-12-17 14:40:00",
+          "duration": "0 days 16:40:00",
+          "mean_score": 0.03183177507400318,
+          "mean_value": 0.004027971778919388,
+          "point_count": 201
+        },
+        {
+          "start_idx": 145073,
+          "end_idx": 145133,
+          "start_time": "2022-12-17 15:25:00",
+          "end_time": "2022-12-17 20:25:00",
+          "duration": "0 days 05:00:00",
+          "mean_score": 0.012120424868546805,
+          "mean_value": 0.004360588582291,
+          "point_count": 61
+        },
+        {
+          "start_idx": 145135,
+          "end_idx": 145135,
+          "start_time": "2022-12-17 20:35:00",
+          "end_time": "2022-12-17 20:35:00",
+          "duration": "0 days 00:00:00",
+          "mean_score": 2.8235366688722507e-05,
+          "mean_value": 0.004497294559506,
+          "point_count": 1
+        },
+        {
+          "start_idx": 145139,
+          "end_idx": 145152,
+          "start_time": "2022-12-17 20:55:00",
+          "end_time": "2022-12-17 22:00:00",
+          "duration": "0 days 01:05:00",
+          "mean_score": 0.0022632571429670296,
+          "mean_value": 0.004455916887973171,
+          "point_count": 14
+        }
+      ]
+    },
+    "tag5": {
+      "anomaly_count": 1443,
+      "anomaly_percentage": 0.9690547183495849,
+      "anomaly_regions": [
+        {
+          "start_idx": 2719,
+          "end_idx": 2719,
+          "start_time": "2021-08-10 08:35:00",
+          "end_time": "2021-08-10 08:35:00",
+          "duration": "0 days 00:00:00",
+          "mean_score": 0.0033113081358201457,
+          "mean_value": 27.52307708446796,
+          "point_count": 1
+        },
+        {
+          "start_idx": 2724,
+          "end_idx": 2731,
+          "start_time": "2021-08-10 09:00:00",
+          "end_time": "2021-08-10 09:35:00",
+          "duration": "0 days 00:35:00",
+          "mean_score": 0.07552020381185041,
+          "mean_value": 20.84300133540601,
+          "point_count": 8
+        },
+        {
+          "start_idx": 5597,
+          "end_idx": 5642,
+          "start_time": "2021-08-20 08:25:00",
+          "end_time": "2021-08-20 12:10:00",
+          "duration": "0 days 03:45:00",
+          "mean_score": 0.10240757274434822,
+          "mean_value": 16.264720225264654,
+          "point_count": 46
+        },
+        {
+          "start_idx": 7026,
+          "end_idx": 7029,
+          "start_time": "2021-08-25 07:30:00",
+          "end_time": "2021-08-25 07:45:00",
+          "duration": "0 days 00:15:00",
+          "mean_score": 0.08571613077993254,
+          "mean_value": 19.698334897007403,
+          "point_count": 4
+        },
+        {
+          "start_idx": 7033,
+          "end_idx": 7040,
+          "start_time": "2021-08-25 08:05:00",
+          "end_time": "2021-08-25 08:40:00",
+          "duration": "0 days 00:35:00",
+          "mean_score": 0.06879140016941175,
+          "mean_value": 21.831724902628324,
+          "point_count": 8
+        },
+        {
+          "start_idx": 14827,
+          "end_idx": 14841,
+          "start_time": "2021-09-21 09:35:00",
+          "end_time": "2021-09-21 10:45:00",
+          "duration": "0 days 01:10:00",
+          "mean_score": 0.06501670360831481,
+          "mean_value": 22.185007232313676,
+          "point_count": 15
+        },
+        {
+          "start_idx": 16578,
+          "end_idx": 16578,
+          "start_time": "2021-09-27 11:30:00",
+          "end_time": "2021-09-27 11:30:00",
+          "duration": "0 days 00:00:00",
+          "mean_score": 0.05768344479079324,
+          "mean_value": 23.83999938964844,
+          "point_count": 1
+        },
+        {
+          "start_idx": 17658,
+          "end_idx": 17671,
+          "start_time": "2021-10-01 05:30:00",
+          "end_time": "2021-10-01 06:35:00",
+          "duration": "0 days 01:05:00",
+          "mean_score": 0.06561939052545358,
+          "mean_value": 22.562090724807653,
+          "point_count": 14
+        },
+        {
+          "start_idx": 24891,
+          "end_idx": 24896,
+          "start_time": "2021-10-26 08:15:00",
+          "end_time": "2021-10-26 08:40:00",
+          "duration": "0 days 00:25:00",
+          "mean_score": 0.062018265174546526,
+          "mean_value": 22.792925825488155,
+          "point_count": 6
+        },
+        {
+          "start_idx": 24909,
+          "end_idx": 24919,
+          "start_time": "2021-10-26 09:45:00",
+          "end_time": "2021-10-26 10:35:00",
+          "duration": "0 days 00:50:00",
+          "mean_score": 0.07171254803290489,
+          "mean_value": 21.62502828166572,
+          "point_count": 11
+        },
+        {
+          "start_idx": 24970,
+          "end_idx": 24971,
+          "start_time": "2021-10-26 14:50:00",
+          "end_time": "2021-10-26 14:55:00",
+          "duration": "0 days 00:05:00",
+          "mean_score": 0.029404271461476172,
+          "mean_value": 26.440021385290684,
+          "point_count": 2
+        },
+        {
+          "start_idx": 26366,
+          "end_idx": 26371,
+          "start_time": "2021-10-31 11:10:00",
+          "end_time": "2021-10-31 11:35:00",
+          "duration": "0 days 00:25:00",
+          "mean_score": 0.046947058636316506,
+          "mean_value": 24.67598039183002,
+          "point_count": 6
+        },
+        {
+          "start_idx": 29790,
+          "end_idx": 29799,
+          "start_time": "2021-11-12 08:30:00",
+          "end_time": "2021-11-12 09:15:00",
+          "duration": "0 days 00:45:00",
+          "mean_score": 0.060204483508281725,
+          "mean_value": 23.360864639902253,
+          "point_count": 10
+        },
+        {
+          "start_idx": 30752,
+          "end_idx": 30755,
+          "start_time": "2021-11-15 16:40:00",
+          "end_time": "2021-11-15 16:55:00",
+          "duration": "0 days 00:15:00",
+          "mean_score": 0.043601151250459436,
+          "mean_value": 25.24353184403738,
+          "point_count": 4
+        },
+        {
+          "start_idx": 37597,
+          "end_idx": 37605,
+          "start_time": "2021-12-09 11:05:00",
+          "end_time": "2021-12-09 11:45:00",
+          "duration": "0 days 00:40:00",
+          "mean_score": 0.035614693768482884,
+          "mean_value": 25.90616465018158,
+          "point_count": 9
+        },
+        {
+          "start_idx": 39620,
+          "end_idx": 39626,
+          "start_time": "2021-12-16 11:40:00",
+          "end_time": "2021-12-16 12:10:00",
+          "duration": "0 days 00:30:00",
+          "mean_score": 0.04328248886144297,
+          "mean_value": 25.432225409835844,
+          "point_count": 7
+        },
+        {
+          "start_idx": 40726,
+          "end_idx": 40760,
+          "start_time": "2021-12-20 07:50:00",
+          "end_time": "2021-12-20 10:40:00",
+          "duration": "0 days 02:50:00",
+          "mean_score": 0.05736330577209499,
+          "mean_value": 23.667143970982128,
+          "point_count": 35
+        },
+        {
+          "start_idx": 47353,
+          "end_idx": 47358,
+          "start_time": "2022-01-12 08:05:00",
+          "end_time": "2022-01-12 08:30:00",
+          "duration": "0 days 00:25:00",
+          "mean_score": 0.0409381535774776,
+          "mean_value": 25.751794835769232,
+          "point_count": 6
+        },
+        {
+          "start_idx": 47389,
+          "end_idx": 47391,
+          "start_time": "2022-01-12 11:05:00",
+          "end_time": "2022-01-12 11:15:00",
+          "duration": "0 days 00:10:00",
+          "mean_score": 0.036029011436807146,
+          "mean_value": 26.19351591384542,
+          "point_count": 3
+        },
+        {
+          "start_idx": 47393,
+          "end_idx": 47394,
+          "start_time": "2022-01-12 11:25:00",
+          "end_time": "2022-01-12 11:30:00",
+          "duration": "0 days 00:05:00",
+          "mean_score": 0.049055387680971285,
+          "mean_value": 25.00206238475822,
+          "point_count": 2
+        },
+        {
+          "start_idx": 47861,
+          "end_idx": 47864,
+          "start_time": "2022-01-14 02:25:00",
+          "end_time": "2022-01-14 02:40:00",
+          "duration": "0 days 00:15:00",
+          "mean_score": 0.05315069556598945,
+          "mean_value": 24.367019517540662,
+          "point_count": 4
+        },
+        {
+          "start_idx": 47896,
+          "end_idx": 47900,
+          "start_time": "2022-01-14 05:20:00",
+          "end_time": "2022-01-14 05:40:00",
+          "duration": "0 days 00:20:00",
+          "mean_score": 0.04899372319414026,
+          "mean_value": 24.46627369024965,
+          "point_count": 5
+        },
+        {
+          "start_idx": 49919,
+          "end_idx": 49919,
+          "start_time": "2022-01-21 05:55:00",
+          "end_time": "2022-01-21 05:55:00",
+          "duration": "0 days 00:00:00",
+          "mean_score": 0.004260280245584447,
+          "mean_value": 27.5061224334094,
+          "point_count": 1
+        },
+        {
+          "start_idx": 49933,
+          "end_idx": 49933,
+          "start_time": "2022-01-21 07:05:00",
+          "end_time": "2022-01-21 07:05:00",
+          "duration": "0 days 00:00:00",
+          "mean_score": 0.02108836303688366,
+          "mean_value": 26.98800022125244,
+          "point_count": 1
+        },
+        {
+          "start_idx": 49969,
+          "end_idx": 49969,
+          "start_time": "2022-01-21 10:05:00",
+          "end_time": "2022-01-21 10:05:00",
+          "duration": "0 days 00:00:00",
+          "mean_score": 0.036029011436807146,
+          "mean_value": 26.254347801208496,
+          "point_count": 1
+        },
+        {
+          "start_idx": 57746,
+          "end_idx": 57754,
+          "start_time": "2022-02-17 10:10:00",
+          "end_time": "2022-02-17 10:50:00",
+          "duration": "0 days 00:40:00",
+          "mean_score": 0.04723471859798942,
+          "mean_value": 25.09457588571088,
+          "point_count": 9
+        },
+        {
+          "start_idx": 57760,
+          "end_idx": 57770,
+          "start_time": "2022-02-17 11:20:00",
+          "end_time": "2022-02-17 12:10:00",
+          "duration": "0 days 00:50:00",
+          "mean_score": 0.05223882105949202,
+          "mean_value": 24.145827142796964,
+          "point_count": 11
+        },
+        {
+          "start_idx": 57782,
+          "end_idx": 57792,
+          "start_time": "2022-02-17 13:10:00",
+          "end_time": "2022-02-17 14:00:00",
+          "duration": "0 days 00:50:00",
+          "mean_score": 0.0488303416759613,
+          "mean_value": 24.69875687824209,
+          "point_count": 11
+        },
+        {
+          "start_idx": 57797,
+          "end_idx": 57806,
+          "start_time": "2022-02-17 14:25:00",
+          "end_time": "2022-02-17 15:10:00",
+          "duration": "0 days 00:45:00",
+          "mean_score": 0.04661143549862765,
+          "mean_value": 24.995218444985763,
+          "point_count": 10
+        },
+        {
+          "start_idx": 59239,
+          "end_idx": 59246,
+          "start_time": "2022-02-22 14:35:00",
+          "end_time": "2022-02-22 15:10:00",
+          "duration": "0 days 00:35:00",
+          "mean_score": 0.047745397895624514,
+          "mean_value": 24.581774016648424,
+          "point_count": 8
+        },
+        {
+          "start_idx": 59275,
+          "end_idx": 59280,
+          "start_time": "2022-02-22 17:35:00",
+          "end_time": "2022-02-22 18:00:00",
+          "duration": "0 days 00:25:00",
+          "mean_score": 0.04405775145845198,
+          "mean_value": 25.331665422998725,
+          "point_count": 6
+        },
+        {
+          "start_idx": 70412,
+          "end_idx": 70415,
+          "start_time": "2022-04-02 09:40:00",
+          "end_time": "2022-04-02 09:55:00",
+          "duration": "0 days 00:15:00",
+          "mean_score": 0.03263430673227008,
+          "mean_value": 26.110747149139492,
+          "point_count": 4
+        },
+        {
+          "start_idx": 74114,
+          "end_idx": 74122,
+          "start_time": "2022-04-15 06:10:00",
+          "end_time": "2022-04-15 06:50:00",
+          "duration": "0 days 00:40:00",
+          "mean_score": 0.06204524846808184,
+          "mean_value": 23.096435408008777,
+          "point_count": 9
+        },
+        {
+          "start_idx": 77585,
+          "end_idx": 77617,
+          "start_time": "2022-04-27 07:25:00",
+          "end_time": "2022-04-27 10:05:00",
+          "duration": "0 days 02:40:00",
+          "mean_score": 0.07509535820600162,
+          "mean_value": 20.94348640248067,
+          "point_count": 33
+        },
+        {
+          "start_idx": 87679,
+          "end_idx": 87682,
+          "start_time": "2022-06-01 08:35:00",
+          "end_time": "2022-06-01 08:50:00",
+          "duration": "0 days 00:15:00",
+          "mean_score": 0.13778512549104627,
+          "mean_value": 0.0,
+          "point_count": 4
+        },
+        {
+          "start_idx": 87689,
+          "end_idx": 87704,
+          "start_time": "2022-06-01 09:25:00",
+          "end_time": "2022-06-01 10:40:00",
+          "duration": "0 days 01:15:00",
+          "mean_score": 0.05444390949835592,
+          "mean_value": 24.02000005245209,
+          "point_count": 16
+        },
+        {
+          "start_idx": 94273,
+          "end_idx": 94298,
+          "start_time": "2022-06-24 06:05:00",
+          "end_time": "2022-06-24 08:10:00",
+          "duration": "0 days 02:05:00",
+          "mean_score": 0.13554811755605506,
+          "mean_value": 1.0893118646585724,
+          "point_count": 26
+        },
+        {
+          "start_idx": 94308,
+          "end_idx": 94308,
+          "start_time": "2022-06-24 09:00:00",
+          "end_time": "2022-06-24 09:00:00",
+          "duration": "0 days 00:00:00",
+          "mean_score": 0.054623943801361374,
+          "mean_value": 24.20701624741085,
+          "point_count": 1
+        },
+        {
+          "start_idx": 94312,
+          "end_idx": 94317,
+          "start_time": "2022-06-24 09:20:00",
+          "end_time": "2022-06-24 09:45:00",
+          "duration": "0 days 00:25:00",
+          "mean_score": 0.116079556610703,
+          "mean_value": 11.700896625035602,
+          "point_count": 6
+        },
+        {
+          "start_idx": 107827,
+          "end_idx": 107844,
+          "start_time": "2022-08-10 07:35:00",
+          "end_time": "2022-08-10 09:00:00",
+          "duration": "0 days 01:25:00",
+          "mean_score": 0.07301153857982198,
+          "mean_value": 21.214602976061073,
+          "point_count": 18
+        },
+        {
+          "start_idx": 125740,
+          "end_idx": 125740,
+          "start_time": "2022-10-11 12:20:00",
+          "end_time": "2022-10-11 12:20:00",
+          "duration": "0 days 00:00:00",
+          "mean_score": 0.020602334666915523,
+          "mean_value": 27.00845235704333,
+          "point_count": 1
+        },
+        {
+          "start_idx": 128263,
+          "end_idx": 128265,
+          "start_time": "2022-10-20 06:35:00",
+          "end_time": "2022-10-20 06:45:00",
+          "duration": "0 days 00:10:00",
+          "mean_score": 0.029717241350480778,
+          "mean_value": 26.338348428529855,
+          "point_count": 3
+        },
+        {
+          "start_idx": 128293,
+          "end_idx": 128302,
+          "start_time": "2022-10-20 09:05:00",
+          "end_time": "2022-10-20 09:50:00",
+          "duration": "0 days 00:45:00",
+          "mean_score": 0.06446277043095486,
+          "mean_value": 22.48573330911827,
+          "point_count": 10
+        },
+        {
+          "start_idx": 128311,
+          "end_idx": 128312,
+          "start_time": "2022-10-20 10:35:00",
+          "end_time": "2022-10-20 10:40:00",
+          "duration": "0 days 00:05:00",
+          "mean_score": 0.09128538771779293,
+          "mean_value": 17.92477320719923,
+          "point_count": 2
+        },
+        {
+          "start_idx": 139203,
+          "end_idx": 139212,
+          "start_time": "2022-11-27 06:15:00",
+          "end_time": "2022-11-27 07:00:00",
+          "duration": "0 days 00:45:00",
+          "mean_score": 0.05010361395075983,
+          "mean_value": 24.16598662796302,
+          "point_count": 10
+        },
+        {
+          "start_idx": 141359,
+          "end_idx": 141380,
+          "start_time": "2022-12-04 17:55:00",
+          "end_time": "2022-12-04 19:40:00",
+          "duration": "0 days 01:45:00",
+          "mean_score": 0.07031746346708766,
+          "mean_value": 21.3862526587759,
+          "point_count": 22
+        },
+        {
+          "start_idx": 141594,
+          "end_idx": 141595,
+          "start_time": "2022-12-05 13:30:00",
+          "end_time": "2022-12-05 13:35:00",
+          "duration": "0 days 00:05:00",
+          "mean_score": 0.0064068201239047,
+          "mean_value": 27.45664683462143,
+          "point_count": 2
+        },
+        {
+          "start_idx": 141609,
+          "end_idx": 141611,
+          "start_time": "2022-12-05 14:45:00",
+          "end_time": "2022-12-05 14:55:00",
+          "duration": "0 days 00:10:00",
+          "mean_score": 0.003628059923960684,
+          "mean_value": 27.514783945229393,
+          "point_count": 3
+        },
+        {
+          "start_idx": 141613,
+          "end_idx": 141614,
+          "start_time": "2022-12-05 15:05:00",
+          "end_time": "2022-12-05 15:10:00",
+          "duration": "0 days 00:05:00",
+          "mean_score": 0.004973214280014904,
+          "mean_value": 27.49791165861697,
+          "point_count": 2
+        },
+        {
+          "start_idx": 141623,
+          "end_idx": 141632,
+          "start_time": "2022-12-05 15:55:00",
+          "end_time": "2022-12-05 16:40:00",
+          "duration": "0 days 00:45:00",
+          "mean_score": 0.0051194105418303605,
+          "mean_value": 27.499482298008463,
+          "point_count": 10
+        },
+        {
+          "start_idx": 141920,
+          "end_idx": 141920,
+          "start_time": "2022-12-06 16:40:00",
+          "end_time": "2022-12-06 16:40:00",
+          "duration": "0 days 00:00:00",
+          "mean_score": 0.0033113081358201457,
+          "mean_value": 27.521147080836062,
+          "point_count": 1
+        },
+        {
+          "start_idx": 142015,
+          "end_idx": 142015,
+          "start_time": "2022-12-07 00:35:00",
+          "end_time": "2022-12-07 00:35:00",
+          "duration": "0 days 00:00:00",
+          "mean_score": 0.008080333191817002,
+          "mean_value": 27.436456500176472,
+          "point_count": 1
+        },
+        {
+          "start_idx": 143139,
+          "end_idx": 143141,
+          "start_time": "2022-12-10 22:15:00",
+          "end_time": "2022-12-10 22:25:00",
+          "duration": "0 days 00:10:00",
+          "mean_score": 0.012256128663846436,
+          "mean_value": 27.297688277454373,
+          "point_count": 3
+        },
+        {
+          "start_idx": 143160,
+          "end_idx": 143160,
+          "start_time": "2022-12-11 00:00:00",
+          "end_time": "2022-12-11 00:00:00",
+          "duration": "0 days 00:00:00",
+          "mean_score": 0.008080333191817002,
+          "mean_value": 27.443599110451203,
+          "point_count": 1
+        },
+        {
+          "start_idx": 143167,
+          "end_idx": 143167,
+          "start_time": "2022-12-11 00:35:00",
+          "end_time": "2022-12-11 00:35:00",
+          "duration": "0 days 00:00:00",
+          "mean_score": 0.0033113081358201457,
+          "mean_value": 27.522851926670985,
+          "point_count": 1
+        },
+        {
+          "start_idx": 143186,
+          "end_idx": 143193,
+          "start_time": "2022-12-11 02:10:00",
+          "end_time": "2022-12-11 02:45:00",
+          "duration": "0 days 00:35:00",
+          "mean_score": 0.022936548947125837,
+          "mean_value": 26.799647271276598,
+          "point_count": 8
+        },
+        {
+          "start_idx": 143234,
+          "end_idx": 143234,
+          "start_time": "2022-12-11 06:10:00",
+          "end_time": "2022-12-11 06:10:00",
+          "duration": "0 days 00:00:00",
+          "mean_score": 0.018177119306433287,
+          "mean_value": 27.15933480288415,
+          "point_count": 1
+        },
+        {
+          "start_idx": 143291,
+          "end_idx": 143292,
+          "start_time": "2022-12-11 10:55:00",
+          "end_time": "2022-12-11 11:00:00",
+          "duration": "0 days 00:05:00",
+          "mean_score": 0.024702435898074193,
+          "mean_value": 26.810459707508084,
+          "point_count": 2
+        },
+        {
+          "start_idx": 143447,
+          "end_idx": 143447,
+          "start_time": "2022-12-11 23:55:00",
+          "end_time": "2022-12-11 23:55:00",
+          "duration": "0 days 00:00:00",
+          "mean_score": 0.0109505055297765,
+          "mean_value": 27.33556830174038,
+          "point_count": 1
+        },
+        {
+          "start_idx": 143453,
+          "end_idx": 143457,
+          "start_time": "2022-12-12 00:25:00",
+          "end_time": "2022-12-12 00:45:00",
+          "duration": "0 days 00:20:00",
+          "mean_score": 0.028343282645437416,
+          "mean_value": 26.542525421160104,
+          "point_count": 5
+        },
+        {
+          "start_idx": 143465,
+          "end_idx": 143465,
+          "start_time": "2022-12-12 01:25:00",
+          "end_time": "2022-12-12 01:25:00",
+          "duration": "0 days 00:00:00",
+          "mean_score": 0.014795571602061242,
+          "mean_value": 27.226635524183905,
+          "point_count": 1
+        },
+        {
+          "start_idx": 143474,
+          "end_idx": 143482,
+          "start_time": "2022-12-12 02:10:00",
+          "end_time": "2022-12-12 02:50:00",
+          "duration": "0 days 00:40:00",
+          "mean_score": 0.02583101841604247,
+          "mean_value": 26.662731479164503,
+          "point_count": 9
+        },
+        {
+          "start_idx": 143925,
+          "end_idx": 143925,
+          "start_time": "2022-12-13 15:45:00",
+          "end_time": "2022-12-13 15:45:00",
+          "duration": "0 days 00:00:00",
+          "mean_score": 0.0033113081358201457,
+          "mean_value": 27.522000083923334,
+          "point_count": 1
+        },
+        {
+          "start_idx": 143941,
+          "end_idx": 143941,
+          "start_time": "2022-12-13 17:05:00",
+          "end_time": "2022-12-13 17:05:00",
+          "duration": "0 days 00:00:00",
+          "mean_score": 0.0033113081358201457,
+          "mean_value": 27.53134078622182,
+          "point_count": 1
+        },
+        {
+          "start_idx": 143948,
+          "end_idx": 143955,
+          "start_time": "2022-12-13 17:40:00",
+          "end_time": "2022-12-13 18:15:00",
+          "duration": "0 days 00:35:00",
+          "mean_score": 0.003964348730179312,
+          "mean_value": 27.508490074074437,
+          "point_count": 8
+        },
+        {
+          "start_idx": 143959,
+          "end_idx": 143977,
+          "start_time": "2022-12-13 18:35:00",
+          "end_time": "2022-12-13 20:05:00",
+          "duration": "0 days 01:30:00",
+          "mean_score": 0.005292231811822397,
+          "mean_value": 27.48905276526609,
+          "point_count": 19
+        },
+        {
+          "start_idx": 143984,
+          "end_idx": 143985,
+          "start_time": "2022-12-13 20:40:00",
+          "end_time": "2022-12-13 20:45:00",
+          "duration": "0 days 00:05:00",
+          "mean_score": 0.004262850231356585,
+          "mean_value": 27.515661893078487,
+          "point_count": 2
+        },
+        {
+          "start_idx": 143988,
+          "end_idx": 144882,
+          "start_time": "2022-12-13 21:00:00",
+          "end_time": "2022-12-16 23:30:00",
+          "duration": "3 days 02:30:00",
+          "mean_score": 0.10324599418234731,
+          "mean_value": 14.53588488133435,
+          "point_count": 895
+        },
+        {
+          "start_idx": 144890,
+          "end_idx": 144901,
+          "start_time": "2022-12-17 00:10:00",
+          "end_time": "2022-12-17 01:05:00",
+          "duration": "0 days 00:55:00",
+          "mean_score": 0.036648233871181685,
+          "mean_value": 25.914271696482697,
+          "point_count": 12
+        },
+        {
+          "start_idx": 144910,
+          "end_idx": 144910,
+          "start_time": "2022-12-17 01:50:00",
+          "end_time": "2022-12-17 01:50:00",
+          "duration": "0 days 00:00:00",
+          "mean_score": 0.010471333975586417,
+          "mean_value": 27.369083268652417,
+          "point_count": 1
+        },
+        {
+          "start_idx": 144917,
+          "end_idx": 144918,
+          "start_time": "2022-12-17 02:25:00",
+          "end_time": "2022-12-17 02:30:00",
+          "duration": "0 days 00:05:00",
+          "mean_score": 0.013596675509773448,
+          "mean_value": 27.276828180834002,
+          "point_count": 2
+        },
+        {
+          "start_idx": 144920,
+          "end_idx": 144924,
+          "start_time": "2022-12-17 02:40:00",
+          "end_time": "2022-12-17 03:00:00",
+          "duration": "0 days 00:20:00",
+          "mean_score": 0.024636624432885945,
+          "mean_value": 26.712161488685428,
+          "point_count": 5
+        },
+        {
+          "start_idx": 144942,
+          "end_idx": 144942,
+          "start_time": "2022-12-17 04:30:00",
+          "end_time": "2022-12-17 04:30:00",
+          "duration": "0 days 00:00:00",
+          "mean_score": 0.008080333191817002,
+          "mean_value": 27.412320711072745,
+          "point_count": 1
+        },
+        {
+          "start_idx": 144945,
+          "end_idx": 144951,
+          "start_time": "2022-12-17 04:45:00",
+          "end_time": "2022-12-17 05:15:00",
+          "duration": "0 days 00:30:00",
+          "mean_score": 0.027979206100758595,
+          "mean_value": 26.62137036692081,
+          "point_count": 7
+        },
+        {
+          "start_idx": 144968,
+          "end_idx": 144971,
+          "start_time": "2022-12-17 06:40:00",
+          "end_time": "2022-12-17 06:55:00",
+          "duration": "0 days 00:15:00",
+          "mean_score": 0.022720548805222063,
+          "mean_value": 26.875387645208264,
+          "point_count": 4
+        },
+        {
+          "start_idx": 144987,
+          "end_idx": 144987,
+          "start_time": "2022-12-17 08:15:00",
+          "end_time": "2022-12-17 08:15:00",
+          "duration": "0 days 00:00:00",
+          "mean_score": 0.00760310290016275,
+          "mean_value": 27.45541382975124,
+          "point_count": 1
+        },
+        {
+          "start_idx": 144990,
+          "end_idx": 144992,
+          "start_time": "2022-12-17 08:30:00",
+          "end_time": "2022-12-17 08:40:00",
+          "duration": "0 days 00:10:00",
+          "mean_score": 0.016725375727017044,
+          "mean_value": 27.097889489094413,
+          "point_count": 3
+        }
+      ]
+    },
+    "tag6": {
+      "anomaly_count": 1472,
+      "anomaly_percentage": 0.9885298304993687,
+      "anomaly_regions": [
+        {
+          "start_idx": 0,
+          "end_idx": 251,
+          "start_time": "2021-07-31 22:00:00",
+          "end_time": "2021-08-01 18:55:00",
+          "duration": "0 days 20:55:00",
+          "mean_score": 0.01912568265494517,
+          "mean_value": 66.42062708358239,
+          "point_count": 252
+        },
+        {
+          "start_idx": 253,
+          "end_idx": 304,
+          "start_time": "2021-08-01 19:05:00",
+          "end_time": "2021-08-01 23:20:00",
+          "duration": "0 days 04:15:00",
+          "mean_score": 0.015300402516819765,
+          "mean_value": 67.07991602445318,
+          "point_count": 52
+        },
+        {
+          "start_idx": 307,
+          "end_idx": 380,
+          "start_time": "2021-08-01 23:35:00",
+          "end_time": "2021-08-02 05:40:00",
+          "duration": "0 days 06:05:00",
+          "mean_score": 0.015477649840631923,
+          "mean_value": 67.05586942726087,
+          "point_count": 74
+        },
+        {
+          "start_idx": 382,
+          "end_idx": 627,
+          "start_time": "2021-08-02 05:50:00",
+          "end_time": "2021-08-03 02:15:00",
+          "duration": "0 days 20:25:00",
+          "mean_score": 0.009188087385987996,
+          "mean_value": 68.7993321949957,
+          "point_count": 246
+        },
+        {
+          "start_idx": 656,
+          "end_idx": 659,
+          "start_time": "2021-08-03 04:40:00",
+          "end_time": "2021-08-03 04:55:00",
+          "duration": "0 days 00:15:00",
+          "mean_score": 0.00047799153596761457,
+          "mean_value": 70.43991359739742,
+          "point_count": 4
+        },
+        {
+          "start_idx": 87679,
+          "end_idx": 87682,
+          "start_time": "2022-06-01 08:35:00",
+          "end_time": "2022-06-01 08:50:00",
+          "duration": "0 days 00:15:00",
+          "mean_score": 0.04223730841741491,
+          "mean_value": 0.0,
+          "point_count": 4
+        },
+        {
+          "start_idx": 94274,
+          "end_idx": 94298,
+          "start_time": "2022-06-24 06:10:00",
+          "end_time": "2022-06-24 08:10:00",
+          "duration": "0 days 02:00:00",
+          "mean_score": 0.04195505934759872,
+          "mean_value": 1.4117746777333335,
+          "point_count": 25
+        },
+        {
+          "start_idx": 94312,
+          "end_idx": 94314,
+          "start_time": "2022-06-24 09:20:00",
+          "end_time": "2022-06-24 09:30:00",
+          "duration": "0 days 00:10:00",
+          "mean_score": 0.026354934703712047,
+          "mean_value": 46.70667293697781,
+          "point_count": 3
+        },
+        {
+          "start_idx": 94316,
+          "end_idx": 94317,
+          "start_time": "2022-06-24 09:40:00",
+          "end_time": "2022-06-24 09:45:00",
+          "duration": "0 days 00:05:00",
+          "mean_score": 0.03620201949791946,
+          "mean_value": 35.526796390795326,
+          "point_count": 2
+        },
+        {
+          "start_idx": 94923,
+          "end_idx": 95314,
+          "start_time": "2022-06-26 12:15:00",
+          "end_time": "2022-06-27 20:50:00",
+          "duration": "1 days 08:35:00",
+          "mean_score": 0.012887773147043124,
+          "mean_value": 232.66858334011263,
+          "point_count": 392
+        },
+        {
+          "start_idx": 128311,
+          "end_idx": 128311,
+          "start_time": "2022-10-20 10:35:00",
+          "end_time": "2022-10-20 10:35:00",
+          "duration": "0 days 00:00:00",
+          "mean_score": 0.03518108167201017,
+          "mean_value": 43.66032278684627,
+          "point_count": 1
+        },
+        {
+          "start_idx": 144199,
+          "end_idx": 144199,
+          "start_time": "2022-12-14 14:35:00",
+          "end_time": "2022-12-14 14:35:00",
+          "duration": "0 days 00:00:00",
+          "mean_score": 0.00047799153596761457,
+          "mean_value": 70.43472666234064,
+          "point_count": 1
+        },
+        {
+          "start_idx": 144203,
+          "end_idx": 144618,
+          "start_time": "2022-12-14 14:55:00",
+          "end_time": "2022-12-16 01:30:00",
+          "duration": "1 days 10:35:00",
+          "mean_score": 0.023536211896423128,
+          "mean_value": 65.85771788981455,
+          "point_count": 416
+        }
+      ]
+    }
+  }
+}
