@@ -1,0 +1,35 @@
+# Core dependencies
+gradio>=4.13.0
+numpy>=1.24.0
+pillow>=10.0.0
+
+# LangChain and related packages
+langchain>=0.1.0
+langchain-community>=0.0.13
+langchain-core>=0.1.10
+langchain-text-splitters>=0.0.1
+langchain-ollama>=0.0.1
+langchain-huggingface>=0.0.1
+
+# Agent framework
+langgraph>=0.0.20
+
+# Model handling
+transformers>=4.35.0
+sentence-transformers>=2.2.2
+
+# Vector database
+chromadb>=0.4.18
+
+# Document processing
+unstructured>=0.10.30
+pymupdf>=1.23.0  # Alternative to PyPDF
+pypdf>=3.15.1
+pdf2image>=1.16.3
+docling>=0.1.0  # For advanced document parsing
+
+# Optional dependencies for better document processing
+pytesseract>=0.3.10  # For OCR capabilities
+python-magic>=0.4.27  # For file type detection
+matplotlib>=3.7.0  # For plotting in the Time Series agent
+python-docx>=0.8.11  # For .docx file support
