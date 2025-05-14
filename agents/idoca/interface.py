@@ -15,14 +15,31 @@ from idoca.config import (
 from idoca.data_processor import DataProcessor
 from idoca.rag import RAGSystem
 from idoca.agent import IndustrialAgent
-from idoca.utils import format_chatbot_message
+from idoca.utils import format_chatbot_message, get_ollama_models, filter_vision_models, filter_embedding_models
 
 logger = logging.getLogger("idoca.interface")
+
 
 def create_interface():
     """Create the Gradio interface for IDOCA."""
     data_processor = DataProcessor()
+    # Get available models from Ollama
+    ollama_models = get_ollama_models()
     
+    # Filter models (best effort)
+    vision_models = filter_vision_models(ollama_models)
+    embedding_models = filter_embedding_models(ollama_models)
+
+    # Ensure we have the default models in the lists
+    if DEFAULT_EMBEDDING_MODEL not in embedding_models:
+        embedding_models = [DEFAULT_EMBEDDING_MODEL] + embedding_models
+    
+    if DEFAULT_VISION_MODEL not in vision_models:
+        vision_models = [DEFAULT_VISION_MODEL] + vision_models
+    
+    if DEFAULT_LLM_MODEL not in ollama_models:
+        ollama_models = [DEFAULT_LLM_MODEL] + ollama_models
+
     with gr.Blocks(title="Industrial Documents Analysis Agent", theme=gr.themes.Soft()) as demo:
         # State variables
         rag_s = gr.State(None)  # RAG system instance
@@ -65,17 +82,17 @@ def create_interface():
                         
                         gr.Markdown("#### **Step 2:** Select Models")
                         embedding_model_dd = gr.Dropdown(
-                            choices=["nomic-embed-text", "all-MiniLM-L6-v2"], 
+                            choices=embedding_models, 
                             value=DEFAULT_EMBEDDING_MODEL, 
                             label="Embedding"
                         )
                         vision_model_dd = gr.Dropdown(
-                            choices=["llava", "granite3.2-vision:2b-fp16"], 
+                            choices=vision_models, 
                             value=DEFAULT_VISION_MODEL, 
                             label="Vision"
                         )
                         llm_model_dd = gr.Dropdown(
-                            choices=["llama3", "qwen3:8b", "mistral"], 
+                            choices=ollama_models, 
                             value=DEFAULT_LLM_MODEL, 
                             label="LLM (RAG & Agent)"
                         )

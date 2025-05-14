@@ -6,7 +6,7 @@ import traceback
 from typing import List, Dict, Any, Optional
 import logging
 from datetime import datetime
-
+import ollama
 from langchain_core.messages import BaseMessage, AIMessage
 from langchain_core.embeddings import Embeddings
 from langchain_core.language_models.chat_models import BaseChatModel
@@ -42,6 +42,37 @@ def format_chatbot_message(role: str, content: str, metadata: Optional[Dict] = N
         else:
             message["content"] = details_md
     return message
+
+
+def get_ollama_models():
+    """Query Ollama API to get available models using the ollama package."""
+    try:
+        # List models using the ollama package
+        models_response = ollama.list() # This returns a ListResponse object
+
+        # Extract model names from the response
+        # Access the .models attribute of the response object,
+        # then the .model attribute of each Model object in that list.
+        model_names = [model_obj.model for model_obj in models_response.models]
+        
+        # Sort models alphabetically
+        model_names.sort()
+        
+        return model_names
+    except Exception as e:
+        logger.error(f"Error getting Ollama models: {e}")
+        # Return default models if error occurs
+        return ["llama3", "qwen3:8b", "mistral"]
+
+def filter_vision_models(models):
+    """Filter for likely vision models based on naming patterns."""
+    vision_patterns = ["vision", "llava", "vl", "visual", "multimodal"]
+    return [model for model in models if any(pattern in model.lower() for pattern in vision_patterns)]
+
+def filter_embedding_models(models):
+    """Filter for likely embedding models based on naming patterns."""
+    embedding_patterns = ["embed", "nomic", "mxbai"]
+    return [model for model in models if any(pattern in model.lower() for pattern in embedding_patterns)]
 
 class MockEmbeddings(Embeddings):
     """Mock embedding class for fallback."""

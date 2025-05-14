@@ -3,7 +3,7 @@
 # Default models
 DEFAULT_EMBEDDING_MODEL = "nomic-embed-text"
 DEFAULT_VISION_MODEL = "granite3.2-vision:2b-fp16"
-DEFAULT_LLM_MODEL = "qwen3:8b"
+DEFAULT_LLM_MODEL = "qwen3:0.6b"
 
 # UI elements
 BOT_AVATAR_URL = "https://img.icons8.com/plasticine/100/bot.png"  # Generic bot icon
