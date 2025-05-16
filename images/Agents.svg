@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" style="background-color:#f0f4f8">
+  <defs>
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2a5f7f;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#00000040"/>
+    </filter>
+  </defs>
+  
+  <!-- Industrial Equipment -->
+  <rect x="200" y="500" width="800" height="60" fill="#334155" rx="5"/>
+  <path d="M300 560v-120h40v120" fill="#64748b"/>
+  <path d="M500 560v-80h30v80" fill="#64748b"/>
+  <path d="M700 560v-150h50v150" fill="#64748b"/>
+  
+  <!-- Document Analysis Agent -->
+  <g transform="translate(100,100)">
+    <rect x="0" y="0" width="400" height="300" fill="url(#blueGrad)" rx="15"/>
+    <path d="M50 80h300v180H50z" fill="#fff"/>
+    <path d="M60 90h280v20H60zM60 120h200v10H60zM60 140h240v10H60z" fill="#3b82f6"/>
+    <path d="M200 230l50-30-50-30v60z" fill="#f97316"/>
+    <g transform="translate(300,200)">
+      <circle cx="0" cy="0" r="40" fill="#fff"/>
+      <path d="M-15-15l30 30m0-30l-30 30" stroke="#3b82f6" stroke-width="4"/>
+    </g>
+    <text x="200" y="50" text-anchor="middle" fill="white" font-size="18" font-family="Arial">Document Analysis Agent</text>
+  </g>
+  
+  <!-- Time Series Agent -->
+  <g transform="translate(700,100)">
+    <rect x="0" y="0" width="400" height="300" fill="#f97316" rx="15"/>
+    <path d="M50 80h300v180H50z" fill="#fff"/>
+    <path d="M60 90h280v160H60z" fill="#fff"/>
+    <path d="M80 100v140h240" stroke="#3b82f6" stroke-width="2" fill="none"/>
+    <path d="M100 180l20-30 20 40 20-50 20 60" stroke="#f97316" stroke-width="2" fill="none"/>
+    <text x="200" y="50" text-anchor="middle" fill="white" font-size="18" font-family="Arial">Time Series Analysis</text>
+    <circle cx="320" cy="220" r="15" fill="#3b82f6"/>
+    <path d="M320 220l20 20m-20-20l-20 20" stroke="white" stroke-width="2"/>
+  </g>
+  
+  <!-- AI Framework Elements -->
+  <g transform="translate(500,400)" opacity="0.8">
+    <circle cx="0" cy="0" r="60" fill="#ffffff" filter="url(#shadow)"/>
+    <path d="M-30-30l60 60m0-60l-60 60" stroke="#3b82f6" stroke-width="6"/>
+    <path d="M-20 0h40M0-20v40" stroke="#f97316" stroke-width="4"/>
+  </g>
+  
+  <!-- Data Flow Connections -->
+  <path d="M500 250c100-50 100 50 200 0" fill="none" stroke="#64748b" stroke-width="2" stroke-dasharray="4"/>
+  <path d="M400 380l100 20-100 20" fill="none" stroke="#3b82f6" stroke-width="2"/>
+</svg>
