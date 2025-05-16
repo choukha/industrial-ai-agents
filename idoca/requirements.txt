@@ -1,0 +1,34 @@
+# Core LangChain and related libraries
+langchain
+langchain-core
+langchain-community
+langchain-text-splitters
+langchain-ollama
+langgraph
+
+# Vector Database
+chromadb
+
+# Document Loaders
+unstructured # For PDF, CSV, TXT, MD loading.
+# For full PDF support with 'unstructured', you might need to install optional dependencies:
+# pip install "unstructured[pdf]"
+# This often includes libraries like pdfminer.six, pikepdf.
+
+# UI
+gradio
+
+# Ollama Python client
+ollama
+
+# Image processing
+Pillow
+
+# Numerical operations (often a dependency of other libraries, but good to list)
+numpy
+
+# Other direct dependencies (if any, based on specific tool implementations not fully shown)
+# Add any other specific libraries your tools might use here.
+
+# Note: Ensure your root requirements.txt (in the parent directory)
+# covers any shared dependencies or general project tools.

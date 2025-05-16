@@ -1,0 +1,24 @@
+# Agent Framework
+smolagents
+
+# LLM interaction and local hosting
+ollama
+python-dotenv # For loading .env files (used in app.py)
+litellm # Often used by smolagents or for broader LLM provider support via LiteLLMModel
+
+# Data Handling and Analysis
+pandas
+numpy
+scikit-learn # For sklearn.ensemble.IsolationForest
+statsmodels # For statsmodels.tsa.seasonal.seasonal_decompose
+
+# Plotting
+plotly # For plotly.graph_objects and plotly.subplots
+
+# UI
+gradio
+
+# Note: Ensure your root requirements.txt (in the parent directory)
+# covers any shared dependencies or general project tools.
+# Standard library modules like os, argparse, pathlib, logging, typing, re, json
+# are part of Python and do not need to be listed here.

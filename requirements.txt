@@ -1,35 +1,53 @@
-# Core dependencies
-gradio>=4.13.0
-numpy>=1.24.0
-pillow>=10.0.0
+# This is the root requirements.txt file for the Industrial AI Agents project.
+# It includes common dependencies and those required by the sub-modules (IDOCA and ITISA).
+# It's generally recommended to also maintain separate requirements.txt files
+# within each sub-module (e.g., idoca/requirements.txt, itisa/requirements.txt)
+# if they have distinct dependencies or if you want to manage their environments separately.
+# This root file can be used to set up an environment for running both agents.
 
-# LangChain and related packages
-langchain>=0.1.0
-langchain-community>=0.0.13
-langchain-core>=0.1.10
-langchain-text-splitters>=0.0.1
-langchain-ollama>=0.0.1
-langchain-huggingface>=0.0.1
+# --- Core AI/LLM Frameworks & Interactions ---
+langchain
+langchain-core
+langchain-community
+langchain-text-splitters
+langchain-ollama
+langgraph
+smolagents
+ollama # Python client for Ollama
+litellm # Used by smolagents for broader LLM provider support
+python-dotenv # For loading .env files
 
-# Agent framework
-langgraph>=0.0.20
+# --- Data Handling, Analysis & Document Processing ---
+pandas # For data manipulation, especially in ITISA
+numpy # For numerical operations, dependency for many libraries
+scikit-learn # For machine learning tasks (e.g., anomaly detection in ITISA)
+statsmodels # For statistical models (e.g., time series decomposition in ITISA)
+unstructured # For document parsing in IDOCA.
+# For full PDF support with 'unstructured', you might need to install optional dependencies:
+# pip install "unstructured[pdf]"
+# This often includes libraries like pdfminer.six, pikepdf.
+Pillow # For image processing (used in IDOCA)
 
-# Model handling
-transformers>=4.35.0
-sentence-transformers>=2.2.2
+# --- Vector Database ---
+chromadb # For RAG in IDOCA
 
-# Vector database
-chromadb>=0.4.18
+# --- Plotting & User Interface ---
+plotly # For interactive plots in ITISA
+gradio # For UI in both IDOCA and ITISA
 
-# Document processing
-unstructured>=0.10.30
-pymupdf>=1.23.0  # Alternative to PyPDF
-pypdf>=3.15.1
-pdf2image>=1.16.3
-docling>=0.1.0  # For advanced document parsing
+# --- Optional: Development & Linting Tools ---
+# You might want to add these for development, but they are not strictly required to run the agents.
+# autopep8
+# flake8
+# pytest
 
-# Optional dependencies for better document processing
-pytesseract>=0.3.10  # For OCR capabilities
-python-magic>=0.4.27  # For file type detection
-matplotlib>=3.7.0  # For plotting in the Time Series agent
-python-docx>=0.8.11  # For .docx file support
+# --- Notes ---
+# 1. Specific versions: For production or more stable environments,
+#    you should pin package versions, e.g., pandas==2.0.3.
+#    You can generate a pinned list from your working virtual environment using:
+#    pip freeze > requirements.txt
+#
+# 2. Docling: If using Docling for advanced PDF parsing in IDOCA,
+#    it's often run via Docker. If you need the Python package:
+#    # docling
+#    However, check its specific installation instructions as it might have other dependencies.
