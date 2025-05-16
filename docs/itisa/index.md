@@ -34,8 +34,7 @@ ITISA is built on a **function-calling (or tool-using)** architecture. The LLM a
 5.  **Result Aggregation:** The output from the tool(s) (e.g., a statistical summary, a path to a generated plot, a list of anomalies) is returned to the LLM.
 6.  **Response Generation:** The LLM formulates a natural language response to the user, incorporating the results from the tool execution.
 
-![ITISA Function Calling Architecture Diagram](../assets/itisa-architecture.png)
-*(Reminder: Ensure you have an `itisa-architecture.png` in your `docs/assets/` folder or update path)*
+![ITISA Function Calling Architecture Diagram](../../assets/itisa-architecture.png)
 
 ## 3. Setup and Installation
 
