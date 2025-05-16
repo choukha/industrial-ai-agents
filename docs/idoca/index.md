@@ -35,8 +35,7 @@ IDOCA is built on a Retrieval-Augmented Generation (RAG) architecture. For a det
     * The vector database is searched for the most relevant document chunks.
 4.  **Generation:** The retrieved chunks (context) and the original question are passed to an LLM, which generates an answer.
 
-![IDOCA RAG Architecture Diagram](../assets/idoca-architecture.png)
-*(Reminder: Ensure you have an `idoca-architecture.png` in your `docs/assets/` folder or update path)*
+![IDOCA RAG Architecture Diagram](../../assets/idoca-architecture.png)
 
 ## 3. Setup and Installation
 
