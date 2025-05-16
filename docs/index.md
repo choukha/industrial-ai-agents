@@ -19,8 +19,8 @@ This documentation is organized into the following sections:
     * **[ITISA - Industrial Time Series Analysis Agent](itisa/index.md)**: Detailed documentation for ITISA, focusing on its function-calling architecture, available tools for data analysis and visualization, setup, usage, and example queries.
 * **[Examples and Tutorials](examples/index.md)**: Practical examples, use cases, and tutorials to help you understand how to leverage the agents for various industrial tasks. This section may include Jupyter notebooks or step-by-step guides.
 * **[Troubleshooting Guide](troubleshooting.md)**: Solutions to common issues, error messages, and tips for debugging problems you might encounter during setup or operation.
-* **[Contributing](../CONTRIBUTING.md)**: Guidelines for how you can contribute to the project, report issues, or suggest enhancements. (Links to the main repository `CONTRIBUTING.md`)
-* **[License](../LICENSE)**: Information about the project's open-source license. (Links to the main repository `LICENSE` file)
+* **[Contributing](../CONTRIBUTING.md)**: Guidelines for how you can contribute to the project, report issues, or suggest enhancements.
+* **[License](../LICENSE)**: Information about the project's open-source license.
 
 ## Project Goals
 
