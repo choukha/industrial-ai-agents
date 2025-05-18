@@ -6,8 +6,10 @@ langchain-text-splitters
 langchain-ollama
 langgraph
 
-# Vector Database
-chromadb
+# Vector Databases
+chromadb>=0.4.22
+faiss-cpu>=1.7.4
+pymilvus>=2.3.4
 
 # Document Loaders
 unstructured # For PDF, CSV, TXT, MD loading.
@@ -26,9 +28,3 @@ Pillow
 
 # Numerical operations (often a dependency of other libraries, but good to list)
 numpy
-
-# Other direct dependencies (if any, based on specific tool implementations not fully shown)
-# Add any other specific libraries your tools might use here.
-
-# Note: Ensure your root requirements.txt (in the parent directory)
-# covers any shared dependencies or general project tools.

@@ -2,33 +2,45 @@
 
 import logging
 import traceback
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Literal
 
 from langchain_ollama import OllamaEmbeddings, ChatOllama
-from langchain_community.vectorstores import Chroma
+from langchain_community.vectorstores import Chroma, FAISS
+from langchain_community.vectorstores.milvus import Milvus
 from langchain.chains import RetrievalQA
 from langchain_core.documents import Document
 from langchain_core.vectorstores import VectorStoreRetriever
 from langchain_core.embeddings import Embeddings
 
-from idoca.config import DEFAULT_EMBEDDING_MODEL, DEFAULT_LLM_MODEL
+from idoca.config import (
+    DEFAULT_EMBEDDING_MODEL, DEFAULT_LLM_MODEL, DEFAULT_VECTOR_DB_TYPE,
+    DEFAULT_COLLECTION_NAME
+)
 from idoca.utils import MockEmbeddings, MockChatModel
 
 logger = logging.getLogger("idoca.rag")
 
+# Vector DB type definition
+VectorDBType = Literal["chroma", "faiss", "milvus"]
+
 class RAGSystem:
     """Manages the RAG pipeline: embeddings, vector store, and retrieval chain."""
     
-    def __init__(self, embedding_model_name: str = DEFAULT_EMBEDDING_MODEL, 
+    def __init__(self, 
+                 embedding_model_name: str = DEFAULT_EMBEDDING_MODEL, 
                  llm_model_name: str = DEFAULT_LLM_MODEL, 
-                 collection_name: str = "industrial_rag_v1"):
+                 collection_name: str = DEFAULT_COLLECTION_NAME, 
+                 vector_db_type: VectorDBType = DEFAULT_VECTOR_DB_TYPE,
+                 vector_db_config: Optional[Dict[str, Any]] = None):
         
         self.embedding_model_name = embedding_model_name
         self.llm_model_name = llm_model_name
         self.collection_name = collection_name
+        self.vector_db_type = vector_db_type
+        self.vector_db_config = vector_db_config or {}
         self.embeddings: Optional[Embeddings] = None
         self.llm = None
-        self.vector_store: Optional[Chroma] = None
+        self.vector_store = None
         self.retriever: Optional[VectorStoreRetriever] = None
         self.rag_chain = None
         self.processed_docs: List[Document] = []
@@ -99,22 +111,99 @@ class RAGSystem:
             if self.vector_store and force_rebuild:
                 self.vector_store = None
                 self.retriever = None
-                
-            self.vector_store = Chroma.from_documents(
-                documents=self.processed_docs, 
-                embedding=self.embeddings, 
-                collection_name=self.collection_name
-            )
-            self.retriever = self.vector_store.as_retriever(search_kwargs={"k": 3})
-            self.status_messages.append(f"✅ VS:Built({len(self.processed_docs)} items).")
-            logger.info("VS Built.")
-            return True
             
+            # Build vector store based on specified type
+            if self.vector_db_type == "chroma":
+                return self._build_chroma_vector_store()
+            elif self.vector_db_type == "faiss":
+                return self._build_faiss_vector_store()
+            elif self.vector_db_type == "milvus":
+                return self._build_milvus_vector_store()
+            else:
+                self.status_messages.append(f"❌ VS:Unknown vector DB type '{self.vector_db_type}'")
+                logger.error(f"VS:Unknown vector DB type '{self.vector_db_type}'")
+                return False
+                
         except Exception as e:
             self.status_messages.append(f"❌ VS:Build fail-{e}")
             logger.error(f"VS Build fail:{e}\n{traceback.format_exc()}")
             self.vector_store = None
             self.retriever = None
+            return False
+    
+    def _build_chroma_vector_store(self) -> bool:
+        """Build a Chroma vector store."""
+        try:
+            # Extract Chroma-specific config 
+            persist_directory = self.vector_db_config.get("persist_directory", None)
+            
+            self.vector_store = Chroma.from_documents(
+                documents=self.processed_docs, 
+                embedding=self.embeddings, 
+                collection_name=self.collection_name,
+                persist_directory=persist_directory
+            )
+            self.retriever = self.vector_store.as_retriever(search_kwargs={"k": 3})
+            self.status_messages.append(f"✅ VS:ChromaDB Built({len(self.processed_docs)} items).")
+            logger.info("ChromaDB Built.")
+            return True
+        except Exception as e:
+            self.status_messages.append(f"❌ VS:ChromaDB Build fail-{e}")
+            logger.error(f"ChromaDB Build fail:{e}\n{traceback.format_exc()}")
+            return False
+    
+    def _build_faiss_vector_store(self) -> bool:
+        """Build a FAISS vector store."""
+        try:
+            # Extract FAISS-specific config
+            index_name = self.vector_db_config.get("index_name", "industrial_faiss")
+            
+            self.vector_store = FAISS.from_documents(
+                documents=self.processed_docs,
+                embedding=self.embeddings,
+            )
+            
+            # Save index if path is provided
+            if "save_path" in self.vector_db_config:
+                self.vector_store.save_local(self.vector_db_config["save_path"], index_name)
+                
+            self.retriever = self.vector_store.as_retriever(search_kwargs={"k": 3})
+            self.status_messages.append(f"✅ VS:FAISS Built({len(self.processed_docs)} items).")
+            logger.info("FAISS Built.")
+            return True
+        except Exception as e:
+            self.status_messages.append(f"❌ VS:FAISS Build fail-{e}")
+            logger.error(f"FAISS Build fail:{e}\n{traceback.format_exc()}")
+            return False
+    
+    def _build_milvus_vector_store(self) -> bool:
+        """Build a Milvus vector store."""
+        try:
+            # Extract Milvus-specific config with defaults
+            connection_args = self.vector_db_config.get("connection_args", {
+                "host": "localhost", 
+                "port": "19530"
+            })
+            
+            # Additional Milvus parameters
+            collection_name = self.vector_db_config.get("collection_name", self.collection_name)
+            drop_old = self.vector_db_config.get("drop_old", False)
+            
+            self.vector_store = Milvus.from_documents(
+                documents=self.processed_docs,
+                embedding=self.embeddings,
+                collection_name=collection_name,
+                connection_args=connection_args,
+                drop_old=drop_old
+            )
+            
+            self.retriever = self.vector_store.as_retriever(search_kwargs={"k": 3})
+            self.status_messages.append(f"✅ VS:Milvus Built({len(self.processed_docs)} items).")
+            logger.info("Milvus Built.")
+            return True
+        except Exception as e:
+            self.status_messages.append(f"❌ VS:Milvus Build fail-{e}")
+            logger.error(f"Milvus Build fail:{e}\n{traceback.format_exc()}")
             return False
 
     def initialize_rag_chain(self) -> bool:
@@ -180,9 +269,11 @@ class RAGSystem:
         v_ok = bool(self.vector_store)
         c_ok = bool(self.rag_chain)
         
+        vector_db_name = self.vector_db_type.upper()
+        
         s = (f"RAG:{'OK' if e_ok and l_ok and v_ok and c_ok else 'Needs Attention'} "
              f"(Docs:{len(self.processed_docs)},Emb:{'OK' if e_ok else 'F'},"
-             f"LLM:{'OK' if l_ok else 'F'},VS:{'OK' if v_ok else 'F'},Chain:{'OK' if c_ok else 'F'})")
+             f"LLM:{'OK' if l_ok else 'F'},{vector_db_name}:{'OK' if v_ok else 'F'},Chain:{'OK' if c_ok else 'F'})")
              
         if concise:
             return [s]
@@ -195,6 +286,6 @@ class RAGSystem:
             f"Emb:{es}", 
             f"LLM:{ls}",
             f"Docs:{len(self.processed_docs)}", 
-            f"VS:{'Built' if v_ok else 'NB'}",
+            f"VS:{vector_db_name}{'(Built)' if v_ok else '(NB)'}",
             f"Chain:{'Init' if c_ok else 'NI'}"
         ] + self.status_messages[-1:]

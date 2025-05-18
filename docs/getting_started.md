@@ -89,8 +89,17 @@ With your virtual environment activated:
      ```bash
      pip install -r itisa/requirements.txt
      ```
+3. Package Installation for Development
 
-3. **(Optional) Docling for IDOCA**:
+   When running individual components or scripts directly, you might encounter `ModuleNotFoundError: No module named 'idoca'` errors. This happens because Python cannot locate the package modules. One of the ways to resolve this is to nstall the Package in Development Mode. This approach makes the package available system-wide while allowing you to modify the code:
+
+   ```bash
+   # From the root directory of the repository
+   pip install -e .
+   ```
+   The `-e` flag installs the package in "editable" or "development" mode, creating a link to the source code rather than copying the files. This means any changes you make to the code will be immediately available without reinstallation.
+
+3. **Docling for IDOCA(Optional)**:
    - Docker method:
      ```bash
      docker pull quay.io/docling-project/docling-serve:latest
@@ -100,6 +109,18 @@ With your virtual environment activated:
      ```bash
      pip install docling
      ```
+4. **Vector Database Setup (Optional)**
+   - IDOCA supports multiple vector databases for the RAG pipeline. By default, it uses ChromaDB which requires no additional setup beyond what's included in `requirements.txt`.
+If you plan to use Milvus, it requires a separate setup process as detailed below. FAISS, if chosen, is also included via `requirements.txt` and typically requires no further installation steps beyond that.
+
+   - **For Milvus:**
+      1.  Set up Milvus using Docker:
+         Follow the official Milvus guide for [Standalone Docker Compose Installation](https://milvus.io/docs/install_standalone-windows.md)
+      2.  Optional: Install Attu GUI for Milvus management: Download from [Attu GitHub Releases](https://github.com/zilliztech/attu/releases) and Connect to your Milvus instance (default: `localhost:19530`).
+
+      For detailed instructions on Milvus setup, refer to the official Milvus documentation.
+
+
 
 ### Step 2.5: Pull Required LLM Models via Ollama
 

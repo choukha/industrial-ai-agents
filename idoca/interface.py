@@ -10,6 +10,9 @@ import gradio as gr
 
 from idoca.config import (
     DEFAULT_EMBEDDING_MODEL, DEFAULT_VISION_MODEL, DEFAULT_LLM_MODEL, 
+    DEFAULT_VECTOR_DB_TYPE, DEFAULT_CHROMA_PERSIST_DIR, DEFAULT_FAISS_SAVE_PATH,
+    DEFAULT_FAISS_INDEX_NAME, DEFAULT_MILVUS_HOST, DEFAULT_MILVUS_PORT,
+    DEFAULT_MILVUS_COLLECTION, DEFAULT_MILVUS_DROP_OLD,
     BOT_AVATAR_URL
 )
 from idoca.data_processor import DataProcessor
@@ -96,6 +99,57 @@ def create_interface():
                             value=DEFAULT_LLM_MODEL, 
                             label="LLM (RAG & Agent)"
                         )
+                        
+                        # Add Vector Database selection
+                        gr.Markdown("#### **Vector Database Configuration**")
+                        vector_db_dd = gr.Dropdown(
+                            choices=["chroma", "faiss", "milvus"], 
+                            value=DEFAULT_VECTOR_DB_TYPE, 
+                            label="Vector Database Type"
+                        )
+
+                        # ChromaDB config
+                        with gr.Group(visible=True) as chroma_config:
+                            chroma_persist_dir = gr.Textbox(
+                                value=DEFAULT_CHROMA_PERSIST_DIR, 
+                                label="ChromaDB Persistence Directory (optional)",
+                                placeholder="Leave blank for in-memory database"
+                            )
+
+                        # FAISS config 
+                        with gr.Group(visible=False) as faiss_config:
+                            faiss_save_path = gr.Textbox(
+                                value=DEFAULT_FAISS_SAVE_PATH, 
+                                label="FAISS Save Directory",
+                                placeholder="Directory to save FAISS indexes"
+                            )
+                            faiss_index_name = gr.Textbox(
+                                value=DEFAULT_FAISS_INDEX_NAME, 
+                                label="FAISS Index Name",
+                                placeholder="Name for the saved index"
+                            )
+
+                        # Milvus config
+                        with gr.Group(visible=False) as milvus_config:
+                            milvus_host = gr.Textbox(
+                                value=DEFAULT_MILVUS_HOST, 
+                                label="Milvus Host",
+                                placeholder="localhost"
+                            )
+                            milvus_port = gr.Textbox(
+                                value=DEFAULT_MILVUS_PORT, 
+                                label="Milvus Port",
+                                placeholder="19530"
+                            )
+                            milvus_collection = gr.Textbox(
+                                value=DEFAULT_MILVUS_COLLECTION, 
+                                label="Milvus Collection Name",
+                                placeholder="industrial_docs"
+                            )
+                            milvus_drop_old = gr.Checkbox(
+                                value=DEFAULT_MILVUS_DROP_OLD, 
+                                label="Drop Existing Collection"
+                            )
                         
                         gr.Markdown("---")  # Separator
                         gr.Markdown("#### **Step 3:** Process Uploaded Files")
@@ -288,6 +342,14 @@ def create_interface():
         def handle_initialize_systems(
             emb_model: str, 
             llm_model: str, 
+            vector_db_type: str,
+            chroma_persist_dir: str,
+            faiss_save_path: str,
+            faiss_index_name: str,
+            milvus_host: str,
+            milvus_port: str,
+            milvus_collection: str,
+            milvus_drop_old: bool,
             newly_docs_buffer: List, 
             current_rag_system: Optional[RAGSystem], 
             current_agent_system: Optional[IndustrialAgent], 
@@ -313,10 +375,34 @@ def create_interface():
 
             rag_instance, agent_instance = None, None
             
+            # Prepare vector database configuration based on selection
+            vector_db_config = {}
+            if vector_db_type == "chroma" and chroma_persist_dir:
+                vector_db_config = {"persist_directory": chroma_persist_dir}
+            elif vector_db_type == "faiss":
+                vector_db_config = {
+                    "save_path": faiss_save_path or "./faiss_indexes",
+                    "index_name": faiss_index_name or "industrial_data"
+                }
+            elif vector_db_type == "milvus":
+                vector_db_config = {
+                    "connection_args": {
+                        "host": milvus_host or "localhost",
+                        "port": milvus_port or "19530"
+                    },
+                    "collection_name": milvus_collection or "industrial_docs",
+                    "drop_old": milvus_drop_old
+                }
+            
             # Initialize RAG system
             try:
-                logger.info(f"Building/Rebuilding RAG with {len(all_docs_for_rag_accumulator)} total documents.")
-                rag_instance = RAGSystem(embedding_model_name=emb_model, llm_model_name=llm_model)
+                logger.info(f"Building/Rebuilding RAG with {len(all_docs_for_rag_accumulator)} total documents using {vector_db_type}.")
+                rag_instance = RAGSystem(
+                    embedding_model_name=emb_model, 
+                    llm_model_name=llm_model,
+                    vector_db_type=vector_db_type,
+                    vector_db_config=vector_db_config
+                )
                 rag_instance.add_documents(all_docs_for_rag_accumulator)
                 build_ok = rag_instance.build_vector_store(force_rebuild=True)
                 chain_ok = build_ok and rag_instance.initialize_rag_chain()
@@ -329,7 +415,6 @@ def create_interface():
                 status_lines.append(f"❌ RAG Setup Error: {e}")
                 logger.error(traceback.format_exc())
                 rag_instance = None
-
             # Initialize agent if RAG is available
             if rag_instance:
                 try:
@@ -533,6 +618,18 @@ def create_interface():
                 
                 yield new_history
 
+
+        # Add Vector DB dropdown change handler to show/hide config panels
+        vector_db_dd.change(
+            fn=lambda db_type: (
+                db_type == "chroma",  # ChromaDB visibility
+                db_type == "faiss",   # FAISS visibility
+                db_type == "milvus"   # Milvus visibility
+            ),
+            inputs=[vector_db_dd],
+            outputs=[chroma_config, faiss_config, milvus_config]
+        )
+
         # Setup event listeners
         process_btn.click(
             fn=handle_process_files, 
@@ -540,9 +637,27 @@ def create_interface():
             outputs=[global_status_out, doc_df, img_prev_out, img_desc_out, npd_s, session_processed_paths_s]
         )
 
+        # Update the init_btn.click event to include vector DB parameters
         init_btn.click(
             fn=handle_initialize_systems,
-            inputs=[embedding_model_dd, llm_model_dd, npd_s, rag_s, agent_s, pd_s],
+            inputs=[
+                embedding_model_dd, 
+                llm_model_dd, 
+                vector_db_dd,
+                # Vector DB specific configs
+                chroma_persist_dir,
+                faiss_save_path,
+                faiss_index_name,
+                milvus_host,
+                milvus_port,
+                milvus_collection,
+                milvus_drop_old,
+                # Existing inputs
+                npd_s, 
+                rag_s, 
+                agent_s, 
+                pd_s
+            ],
             outputs=[global_status_out, rag_s, agent_s, pd_s, npd_s]
         )
 

@@ -24,6 +24,40 @@ This guide provides solutions to common issues you might encounter when setting 
 * **Solution 2: Incorrect Python Interpreter:** If you are using an IDE (like VS Code or PyCharm), ensure it's configured to use the Python interpreter from your virtual environment.
 * **Solution 3: Installation in Wrong Environment:** You might have accidentally installed packages globally or in a different virtual environment. Deactivate and reactivate your project's `venv` and try reinstalling.
 
+#### Module Import Errors
+
+**Issue: "ModuleNotFoundError: No module named 'idoca'" or "ModuleNotFoundError: No module named 'itisa'"**
+
+This error occurs when Python cannot find the package modules in its search path. It's common when running individual scripts or components directly.
+
+* **Solution 1: Install the Package in Development Mode:**
+  ```bash
+  # From the root directory of the repository
+  pip install -e .
+  ```
+  This creates an "editable" installation that points to your source code, making all modules available for import.
+
+* **Solution 2: Run from the Correct Directory:**
+  Some scripts are designed to be run from specific directories. Make sure you're in the correct working directory:
+  ```bash
+  # Run IDOCA from the repository root
+  python -m idoca.main
+
+  # Run ITISA from the repository root
+  python -m itisa.app
+  ```
+
+* **Solution 3: Check Virtual Environment:**
+  Ensure your virtual environment is activated and the package is installed in that environment.
+  ```bash
+  # Verify which Python is being used
+  which python  # On Linux/macOS
+  where python  # On Windows
+
+  # Verify installed packages
+  pip list | grep industrial-ai-agents # or findstr on Windows
+  
+
 ### 2. Ollama and LLM Issues
 
 **Issue: Ollama service not running or agents can't connect.**
@@ -127,6 +161,78 @@ This guide provides solutions to common issues you might encounter when setting 
 **Issue: File upload not working in Gradio.**
 * **Solution 1: File Size Limits:** Gradio might have default file size limits. For very large files, this could be an issue (though usually more relevant for public deployments).
 * **Solution 2: Permissions:** Ensure the application has write permissions to any temporary directories it might use.
+
+## Vector Database Specific Issues
+
+### ChromaDB Issues
+
+**Issue: "No such file or directory" when using persistence.**
+
+* **Solution 1: Directory Permissions:** Ensure the specified persistence directory exists and the application has write permissions to it.
+* **Solution 2: Path Format:** Use forward slashes in paths even on Windows (e.g., `./chroma_db` or `C:/Users/name/chroma_db`).
+* **Solution 3: Directory Creation:** Try creating the directory manually before initializing:
+    ```python
+    import os
+    os.makedirs("./chroma_db", exist_ok=True)
+    ```
+
+**Issue: "Missing dependencies for sqlite" error.**
+
+* **Solution:** Install the SQLite dependencies:
+    ```bash
+    pip install chromadb[sqlite]
+    ```
+
+### FAISS Issues
+
+**Issue: "ImportError: DLL load failed" on Windows.**
+
+* **Solution 1: Missing Visual C++ Redistributable:** Install the latest Microsoft Visual C++ Redistributable.
+* **Solution 2: CUDA Version:** If using GPU version, ensure your CUDA version matches the requirements for `faiss-gpu`.
+
+**Issue: "Error while saving index" on Windows.**
+
+* **Solution 1: Path Format:** Use forward slashes or double backslashes in paths.
+* **Solution 2: Permissions:** Ensure write permissions for the save directory.
+* **Solution 3: Directory Existence:** Create the parent directory before saving:
+    ```python
+    import os
+    os.makedirs("./faiss_indexes", exist_ok=True)
+    ```
+
+### Milvus Issues
+
+**Issue: "Failed to connect to Milvus server."**
+
+* **Solution 1: Service Running:** Verify Milvus is running with `docker ps`. If not visible, check `docker-compose up -d` output for errors.
+* **Solution 2: Port Configuration:** Ensure port 19530 is not blocked by firewall or used by another service.
+* **Solution 3: Docker Network:** If running IDOCA in Docker also, ensure proper network configuration to connect to the Milvus container.
+* **Solution 4: Startup Time:** Milvus may take a minute to fully initialize. Wait and retry the connection.
+
+**Issue: "The collection already exists" when trying to create a new collection.**
+
+* **Solution 1: Drop Option:** Enable the "Drop Existing Collection" option in the Milvus configuration.
+* **Solution 2: Attu UI:** Use the Attu UI to manually delete the collection before recreating it.
+* **Solution 3: Collection Naming:** Use a different collection name to avoid conflicts.
+
+**Issue: "Error connecting to Attu UI."**
+
+* **Solution 1: Milvus Running:** Verify Milvus standalone service is running before accessing Attu.
+* **Solution 2: Port Access:** Ensure port 8000 (default for Attu) is not blocked.
+* **Solution 3: URL:** Access Attu at `http://localhost:8000` if using the Docker setup or through the desktop application.
+
+## General Vector Database Troubleshooting
+
+**Issue: "Vector store build failed" or unknown errors during initialization.**
+
+* **Solution 1: Logs:** Check the application logs for more detailed error messages. The vector database errors often contain specific information that isn't displayed in the UI.
+* **Solution 2: Dependencies:** Ensure all required packages are installed correctly:
+    ```bash
+    pip install -r idoca/requirements.txt
+    ```
+* **Solution 3: Simplified Test:** Try a basic test with fewer documents to isolate whether the issue is data-related or configuration-related.
+* **Solution 4: Fallback:** If one vector database is causing issues, try switching to another (e.g., if Milvus setup is problematic, fall back to ChromaDB for immediate progress).
+
 
 ## Advanced Debugging
 
