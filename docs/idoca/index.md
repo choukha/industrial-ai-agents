@@ -142,6 +142,25 @@ You can modify:
 * `USE_DOCLING`, `DOCLING_URL`: Settings for Docling integration.
 * `RAG_NUM_SOURCES_TO_RETRIEVE` (or similar): How many chunks to retrieve for context.
 
+### Vector Database Options
+
+IDOCA now supports multiple vector database options for the RAG system:
+
+1. **ChromaDB (Default)**: A lightweight, file-based or in-memory vector database that is easy to set up and use.
+2. **FAISS**: An efficient similarity search library developed by Facebook AI, optimized for performance.
+3. **Milvus**: A production-grade vector database with advanced features and a graphical management interface.
+
+You can select the vector database in the "Upload & Initialize Data" tab. Each option has specific configuration parameters:
+
+- **ChromaDB**: Optionally specify a persistence directory to save the database between sessions.
+- **FAISS**: Configure save path and index name for storing the vector indices.
+- **Milvus**: Set connection parameters (host, port) and collection management options.
+
+The choice of vector database depends on your specific requirements:
+- For simple prototyping and smaller document collections, **ChromaDB** offers the easiest setup.
+- For improved search performance on medium-sized collections, **FAISS** may provide better results.
+- For production deployments with larger collections, management needs, or analytics, **Milvus** offers the most robust solution.
+
 ## 7. Customization and Extension
 
 * **Document Parsers:** You can integrate other document parsing libraries by modifying `idoca/data_processor.py`.

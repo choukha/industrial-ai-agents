@@ -173,3 +173,5 @@ cython_debug/
 **/**/data/
 **/**/results/
 **/uploads/
+**/**/*_db*/
+**/**/*_indexes*/
