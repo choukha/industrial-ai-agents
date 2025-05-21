@@ -1,7 +1,7 @@
 """Utility functions for Docling integration in IDOCA."""
 
 import logging
-from typing import Dict, Any, Union, Optional
+from typing import Dict, Any
 
 from docling.document_converter import DocumentConverter, PdfFormatOption, ImageFormatOption
 from docling.chunking import HybridChunker

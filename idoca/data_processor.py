@@ -3,6 +3,7 @@
 import os
 import logging
 import traceback
+import re
 from typing import List, Optional
 from datetime import datetime
 
@@ -74,10 +75,10 @@ class DataProcessor:
             logger.error(f"ERROR processing doc '{file_name}': {e}\n{traceback.format_exc()}")
             raise
 
-    def process_image_file(self, file_path: str, vision_model_name: str = None) -> Document:
+    def process_image_file(self, file_path: str) -> Document:
         """
         Processes an image file using Docling with SmolDocling model.
-        Ensures proper extraction of the generated description.
+        Extracts clean description without Docling tags.
         """
         img_name = os.path.basename(file_path)
         logger.info(f"Processing image: {img_name}")
@@ -90,87 +91,77 @@ class DataProcessor:
             logger.info(f"Converting image using Docling converter: {img_name}")
             result = converter.convert(file_path)
             
+            content = None
+            
+            # Process data from direct conversion
             if result and result.document:
                 # Extract the text from the document
                 markdown_text = result.document.export_to_markdown()
                 
                 if markdown_text and len(markdown_text.strip()) > 0:
+                    # Clean up any Docling tags or formatting
+                    content = self._clean_docling_content(markdown_text)
                     logger.info(f"Successfully extracted content via direct conversion for: {img_name}")
-                    return Document(
-                        page_content=markdown_text,
-                        metadata={
-                            "source": file_path,
-                            "image_file": img_name,
-                            "type": "image_description",
-                            "vision_model": "SmolDocling",
-                            "timestamp": datetime.now().isoformat()
-                        }
-                    )
             
-            # Second attempt: Try with DoclingLoader using MARKDOWN export
-            logger.info(f"Attempting DoclingLoader with MARKDOWN export type for: {img_name}")
-            loader_markdown = DoclingLoader(
-                file_path=file_path,
-                export_type=ExportType.MARKDOWN,
-                converter=converter
-            )
-            
-            docs_markdown = loader_markdown.load()
-            
-            if docs_markdown and len(docs_markdown) > 0 and docs_markdown[0].page_content:
-                logger.info(f"Found content through MARKDOWN export for: {img_name}")
-                doc = docs_markdown[0]
-                doc.metadata.update({
-                    "source": file_path,
-                    "image_file": img_name,
-                    "type": "image_description",
-                    "vision_model": "SmolDocling",
-                    "timestamp": datetime.now().isoformat()
-                })
-                return doc
+            # If no content yet, try with DoclingLoader using MARKDOWN export
+            if not content:
+                logger.info(f"Attempting DoclingLoader with MARKDOWN export type for: {img_name}")
+                loader_markdown = DoclingLoader(
+                    file_path=file_path,
+                    export_type=ExportType.MARKDOWN,
+                    converter=converter
+                )
                 
-            # Third attempt: Try with DoclingLoader using DOC_CHUNKS export
-            logger.info(f"Attempting DoclingLoader with DOC_CHUNKS export type for: {img_name}")
-            loader_chunks = DoclingLoader(
-                file_path=file_path,
-                export_type=ExportType.DOC_CHUNKS,
-                converter=converter
-            )
+                docs_markdown = loader_markdown.load()
+                
+                if docs_markdown and len(docs_markdown) > 0 and docs_markdown[0].page_content:
+                    # Clean up any Docling tags or formatting
+                    content = self._clean_docling_content(docs_markdown[0].page_content)
+                    logger.info(f"Found content through MARKDOWN export for: {img_name}")
             
-            docs_chunks = loader_chunks.load()
+            # If still no content, try with DoclingLoader using DOC_CHUNKS export
+            if not content:
+                logger.info(f"Attempting DoclingLoader with DOC_CHUNKS export type for: {img_name}")
+                loader_chunks = DoclingLoader(
+                    file_path=file_path,
+                    export_type=ExportType.DOC_CHUNKS,
+                    converter=converter
+                )
+                
+                docs_chunks = loader_chunks.load()
+                
+                if docs_chunks and len(docs_chunks) > 0:
+                    # Look through all chunks for any with content
+                    for doc in docs_chunks:
+                        if doc.page_content and len(doc.page_content.strip()) > 0:
+                            # Clean up any Docling tags or formatting
+                            content = self._clean_docling_content(doc.page_content)
+                            logger.info(f"Found content in DOC_CHUNKS for: {img_name}")
+                            break
             
-            if docs_chunks and len(docs_chunks) > 0:
-                # Look through all chunks for any with content
-                for doc in docs_chunks:
-                    if doc.page_content and len(doc.page_content.strip()) > 0:
-                        logger.info(f"Found content in DOC_CHUNKS for: {img_name}")
-                        doc.metadata.update({
-                            "source": file_path,
-                            "image_file": img_name,
-                            "type": "image_description",
-                            "vision_model": "SmolDocling",
-                            "timestamp": datetime.now().isoformat()
-                        })
-                        return doc
-                        
-            # Fourth attempt: Check if VLM response is stored in pages or predictions
-            if result and hasattr(result, 'pages'):
+            # If still no content, check if VLM response is stored in pages or predictions
+            if not content and result and hasattr(result, 'pages'):
                 for page in result.pages:
                     if hasattr(page, 'predictions') and hasattr(page.predictions, 'vlm_response'):
                         vlm_text = getattr(page.predictions.vlm_response, 'text', None)
                         if vlm_text:
+                            # Clean up any Docling tags or formatting
+                            content = self._clean_docling_content(vlm_text)
                             logger.info(f"Extracted VLM response text from result.pages for: {img_name}")
-                            return Document(
-                                page_content=vlm_text,
-                                metadata={
-                                    "source": file_path,
-                                    "image_file": img_name,
-                                    "type": "image_description",
-                                    "vision_model": "SmolDocling",
-                                    "timestamp": datetime.now().isoformat(),
-                                    "extracted_from": "pages.predictions.vlm_response.text"
-                                }
-                            )
+                            break
+            
+            # If we have content at this point, return a Document with it
+            if content:
+                return Document(
+                    page_content=content,
+                    metadata={
+                        "source": file_path,
+                        "image_file": img_name,
+                        "type": "image_description",
+                        "vision_model": "SmolDocling",
+                        "timestamp": datetime.now().isoformat()
+                    }
+                )
         
         except Exception as e:
             logger.error(f"Error processing image '{img_name}': {e}\n{traceback.format_exc()}")
@@ -188,3 +179,30 @@ class DataProcessor:
                 "note": "Placeholder description - SmolDocling processing did not yield extractable content"
             }
         )
+    
+    def _clean_docling_content(self, text: str) -> str:
+        """
+        Clean Docling-generated content by removing tags and normalizing formatting.
+        
+        Args:
+            text (str): Raw text with potential Docling tags
+            
+        Returns:
+            str: Cleaned text suitable for display
+        """
+        if not text:
+            return ""
+            
+        # Remove docling XML-style tags
+        cleaned = re.sub(r'<[^>]+>', ' ', text)
+        
+        # Remove unnecessary formatting artifacts
+        cleaned = re.sub(r'\s+', ' ', cleaned)  # Replace multiple spaces with single space
+        cleaned = re.sub(r'^\s+|\s+$', '', cleaned)  # Trim whitespace
+        
+        # Fix markdown artifacts if present
+        cleaned = re.sub(r'\*\*\s*\*\*', '', cleaned)  # Empty bold tags
+        cleaned = re.sub(r'__\s*__', '', cleaned)  # Empty underscore emphasis
+        
+        # Return cleaned text
+        return cleaned.strip()
