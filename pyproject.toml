@@ -10,12 +10,10 @@ dependencies = [
     "nbformat>=4.2.0",
     "oianalytics>=0.6.7",
     "openpyxl>=3.1.5",
+    "pip-system-certs>=4.0",
     "plotly>=6.0.0",
     "python-dotenv>=1.0.1",
     "pyyaml>=6.0.2",
     "smolagents",
-    "tagreader>=6.0.2",
+    "tagreader>=6.0.2"
 ]
-
-[tool.uv.sources]
-smolagents = { git = "https://github.com/huggingface/smolagents.git" }

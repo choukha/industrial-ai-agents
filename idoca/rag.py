@@ -11,7 +11,6 @@ from langchain.chains import RetrievalQA
 from langchain_core.documents import Document
 from langchain_core.vectorstores import VectorStoreRetriever
 from langchain_core.embeddings import Embeddings
-
 from idoca.config import (
     DEFAULT_EMBEDDING_MODEL, DEFAULT_LLM_MODEL, DEFAULT_VECTOR_DB_TYPE,
     DEFAULT_COLLECTION_NAME
@@ -134,11 +133,48 @@ class RAGSystem:
     def _build_chroma_vector_store(self) -> bool:
         """Build a Chroma vector store."""
         try:
+            # Create a custom filter function to handle Docling metadata
+            def filter_docling_metadata(metadata_dict):
+                """Filter complex nested metadata from Docling documents."""
+                if not metadata_dict:
+                    return {}
+                    
+                filtered = {}
+                
+                # Copy simple metadata fields
+                for key, value in metadata_dict.items():
+                    # Keep only simple data types (strings, numbers, booleans)
+                    if isinstance(value, (str, int, float, bool)) or value is None:
+                        filtered[key] = value
+                    elif key == "headings" and isinstance(value, list):
+                        # Convert headings list to a string
+                        filtered[key] = " > ".join(str(h) for h in value if h)
+                
+                return filtered
+            
+            # Process documents to filter complex metadata
+            docs_with_filtered_metadata = []
+            for doc in self.processed_docs:
+                # Create a new document with filtered metadata
+                filtered_metadata = filter_docling_metadata(doc.metadata)
+                
+                # Ensure source is preserved
+                if "source" not in filtered_metadata and hasattr(doc.metadata, "get"):
+                    source = doc.metadata.get("source", "unknown")
+                    if isinstance(source, (str, int, float, bool)) or source is None:
+                        filtered_metadata["source"] = source
+                
+                filtered_doc = Document(
+                    page_content=doc.page_content,
+                    metadata=filtered_metadata
+                )
+                docs_with_filtered_metadata.append(filtered_doc)
+                
             # Extract Chroma-specific config 
             persist_directory = self.vector_db_config.get("persist_directory", None)
             
             self.vector_store = Chroma.from_documents(
-                documents=self.processed_docs, 
+                documents=docs_with_filtered_metadata,  # Use filtered documents
                 embedding=self.embeddings, 
                 collection_name=self.collection_name,
                 persist_directory=persist_directory
