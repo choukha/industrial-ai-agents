@@ -28,6 +28,9 @@ unstructured # For document parsing in IDOCA.
 # This often includes libraries like pdfminer.six, pikepdf.
 Pillow # For image processing (used in IDOCA)
 
+docling
+langchain-docling
+
 # --- Vector Database ---
 chromadb # For RAG in IDOCA
 

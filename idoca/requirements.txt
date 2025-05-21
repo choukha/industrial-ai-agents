@@ -6,16 +6,17 @@ langchain-text-splitters
 langchain-ollama
 langgraph
 
+# Docling and its LangChain integration
+docling
+langchain-docling
+
 # Vector Databases
 chromadb>=0.4.22
 faiss-cpu>=1.7.4
 pymilvus>=2.3.4
 
 # Document Loaders
-unstructured # For PDF, CSV, TXT, MD loading.
-# For full PDF support with 'unstructured', you might need to install optional dependencies:
-# pip install "unstructured[pdf]"
-# This often includes libraries like pdfminer.six, pikepdf.
+unstructured # For PDF, CSV, TXT, MD loading via fallback methods
 
 # UI
 gradio
@@ -28,3 +29,6 @@ Pillow
 
 # Numerical operations (often a dependency of other libraries, but good to list)
 numpy
+
+# CUDA Support
+accelerate

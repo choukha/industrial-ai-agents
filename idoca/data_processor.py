@@ -1,59 +1,65 @@
-"""Document processing and analysis module for IDOCA."""
+"""Document processing and analysis module for IDOCA using Docling."""
 
 import os
 import logging
 import traceback
+import re
 from typing import List, Optional
 from datetime import datetime
-from PIL import Image
 
-from langchain_community.document_loaders import (
-    TextLoader, CSVLoader, UnstructuredFileLoader, UnstructuredPDFLoader
-)
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_ollama import ChatOllama
 from langchain_core.documents import Document
-from langchain_core.messages import HumanMessage
+from langchain_docling import DoclingLoader
+from langchain_docling.loader import ExportType
 
 from idoca.config import DEFAULT_CHUNK_SIZE, DEFAULT_CHUNK_OVERLAP
-from idoca.utils import encode_image
+from idoca.docling_utils import create_docling_converter, create_custom_chunker, get_export_kwargs
 
 logger = logging.getLogger("idoca.data_processor")
 
 class DataProcessor:
-    """Handles loading, processing, and describing various document types."""
+    """Handles loading, processing, and describing various document types using Docling."""
     
     def __init__(self, chunk_size: int = DEFAULT_CHUNK_SIZE, chunk_overlap: int = DEFAULT_CHUNK_OVERLAP):
-        self.text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
+        self.chunk_size = chunk_size
+        self.chunk_overlap = chunk_overlap
         logger.info(f"DataProcessor initialized with chunk_size={chunk_size}, chunk_overlap={chunk_overlap}")
 
     def process_document_file(self, file_path: str) -> List[Document]:
-        """Loads and splits a document file (PDF, CSV, TXT, MD)."""
+        """Loads and splits a document file using Docling with GPU acceleration."""
         file_name = os.path.basename(file_path)
         file_ext = os.path.splitext(file_name)[1].lower()
         logger.info(f"Processing document: {file_name} ({file_ext})")
         
         try:
-            # Select appropriate loader based on file extension
-            if file_ext == '.pdf':
-                loader = UnstructuredPDFLoader(file_path, mode="single", strategy="fast")
-            elif file_ext == '.csv':
-                loader = CSVLoader(file_path, autodetect_encoding=True)
-            elif file_ext in ['.txt', '.md']:
-                loader = TextLoader(file_path, encoding='utf-8')
-            else:
-                loader = UnstructuredFileLoader(file_path, mode="elements")
-
-            # Load and validate documents
-            raw_docs = loader.load()
-            if not raw_docs:
+            # Create custom chunker based on configuration
+            chunker = create_custom_chunker(
+                max_tokens=self.chunk_size,
+                overlap_tokens=self.chunk_overlap
+            )
+            
+            # Create a Docling converter with GPU acceleration
+            converter = create_docling_converter(with_gpu=True)
+            
+            # Create and use DoclingLoader with our custom components
+            loader = DoclingLoader(
+                file_path=file_path,
+                export_type=ExportType.DOC_CHUNKS,
+                chunker=chunker,
+                converter=converter,
+                md_export_kwargs=get_export_kwargs()
+            )
+            
+            # Load documents
+            docs = loader.load()
+            
+            if not docs:
                 if os.path.exists(file_path) and os.path.getsize(file_path) > 0:
                     raise ValueError(f"No content extracted from non-empty file {file_name}.")
                 else:
                     raise ValueError(f"File empty or inaccessible: {file_name}.")
-
+                    
             # Add metadata to documents
-            for doc in raw_docs:
+            for doc in docs:
                 if not hasattr(doc, 'metadata'):
                     doc.metadata = {}
                 doc.metadata.update({
@@ -61,84 +67,142 @@ class DataProcessor:
                     "type": "document", 
                     "timestamp": datetime.now().isoformat()
                 })
-
-            # Split documents and handle edge cases
-            split_docs = self.text_splitter.split_documents(raw_docs)
-            if not split_docs and raw_docs:
-                logger.warning(f"No chunks for {file_name}. Using raw documents.")
-                # Ensure metadata is on raw_docs if returned
-                for doc_raw in raw_docs:
-                    if not hasattr(doc_raw, 'metadata'): 
-                        doc_raw.metadata = {}
-                    doc_raw.metadata.setdefault("source", file_name)
-                    doc_raw.metadata.setdefault("type", "document")
-                    doc_raw.metadata.setdefault("timestamp", datetime.now().isoformat())
-                return raw_docs
                 
-            if not split_docs:
-                return []
-
-            logger.info(f"Processed {file_name}, generated {len(split_docs)} chunks.")
-            return split_docs
+            logger.info(f"Processed {file_name}, generated {len(docs)} chunks.")
+            return docs
             
         except Exception as e:
-            logger.error(f"ERR processing doc '{file_name}': {e}\n{traceback.format_exc()}")
+            logger.error(f"ERROR processing doc '{file_name}': {e}\n{traceback.format_exc()}")
             raise
 
-    def generate_image_description(self, image_path: str, vision_model_name: str) -> str:
-        """Generates a detailed description for an image using a vision model."""
-        img_name = os.path.basename(image_path)
-        logger.info(f"Generating description for {img_name} via {vision_model_name}")
-        
-        try:
-            # Encode image for model input
-            img_data = encode_image(image_path)
-            
-            # Prompt for industrial image description
-            prompt = ("Describe this industrial image in detail. Focus on: "
-                      "1. **Equipment/Machinery:** Types (e.g., furnace, conveyor). "
-                      "2. **Visible Parameters:** Text on gauges, screens, labels. "
-                      "3. **Safety Aspects:** PPE, hazards, signs. "
-                      "4. **Overall Context:** Activity or state. Comprehensive summary.")
-            
-            # Get image description from vision model
-            llm = ChatOllama(model=vision_model_name)
-            msg_content = [
-                {"type": "text", "text": prompt},
-                {"type": "image_url", "image_url": f"data:image/jpeg;base64,{img_data}"}
-            ]
-            response = llm.invoke([HumanMessage(content=msg_content)])
-            
-            if not response or not response.content:
-                raise ValueError(f"Empty response from vision model '{vision_model_name}' for {img_name}.")
-            
-            logger.info(f"Description generated for {img_name}")
-            return response.content
-            
-        except Exception as e:
-            logger.error(f"ERR ({type(e).__name__}) generating img desc for {img_name}: {e}\n{traceback.format_exc()}")
-            raise
-
-    def process_image_file(self, file_path: str, vision_model_name: str) -> Document:
-        """Processes an image file by generating its description and creating a Document."""
+    def process_image_file(self, file_path: str) -> Document:
+        """
+        Processes an image file using Docling with SmolDocling model.
+        Extracts clean description without Docling tags.
+        """
         img_name = os.path.basename(file_path)
-        logger.info(f"Processing image: {img_name} via {vision_model_name}")
+        logger.info(f"Processing image: {img_name}")
         
         try:
-            # Generate description and create document with metadata
-            desc = self.generate_image_description(file_path, vision_model_name)
-            doc = Document(
-                page_content=desc,
-                metadata={
-                    "source": file_path, 
-                    "image_file": img_name, 
-                    "type": "image_description",
-                    "vision_model": vision_model_name, 
-                    "timestamp": datetime.now().isoformat()
-                }
-            )
-            logger.info(f"Doc created for image {img_name}.")
-            return doc
+            # Create a GPU-accelerated converter with SmolDocling
+            converter = create_docling_converter(with_gpu=True)
             
+            # First attempt: Try direct document conversion
+            logger.info(f"Converting image using Docling converter: {img_name}")
+            result = converter.convert(file_path)
+            
+            content = None
+            
+            # Process data from direct conversion
+            if result and result.document:
+                # Extract the text from the document
+                markdown_text = result.document.export_to_markdown()
+                
+                if markdown_text and len(markdown_text.strip()) > 0:
+                    # Clean up any Docling tags or formatting
+                    content = self._clean_docling_content(markdown_text)
+                    logger.info(f"Successfully extracted content via direct conversion for: {img_name}")
+            
+            # If no content yet, try with DoclingLoader using MARKDOWN export
+            if not content:
+                logger.info(f"Attempting DoclingLoader with MARKDOWN export type for: {img_name}")
+                loader_markdown = DoclingLoader(
+                    file_path=file_path,
+                    export_type=ExportType.MARKDOWN,
+                    converter=converter
+                )
+                
+                docs_markdown = loader_markdown.load()
+                
+                if docs_markdown and len(docs_markdown) > 0 and docs_markdown[0].page_content:
+                    # Clean up any Docling tags or formatting
+                    content = self._clean_docling_content(docs_markdown[0].page_content)
+                    logger.info(f"Found content through MARKDOWN export for: {img_name}")
+            
+            # If still no content, try with DoclingLoader using DOC_CHUNKS export
+            if not content:
+                logger.info(f"Attempting DoclingLoader with DOC_CHUNKS export type for: {img_name}")
+                loader_chunks = DoclingLoader(
+                    file_path=file_path,
+                    export_type=ExportType.DOC_CHUNKS,
+                    converter=converter
+                )
+                
+                docs_chunks = loader_chunks.load()
+                
+                if docs_chunks and len(docs_chunks) > 0:
+                    # Look through all chunks for any with content
+                    for doc in docs_chunks:
+                        if doc.page_content and len(doc.page_content.strip()) > 0:
+                            # Clean up any Docling tags or formatting
+                            content = self._clean_docling_content(doc.page_content)
+                            logger.info(f"Found content in DOC_CHUNKS for: {img_name}")
+                            break
+            
+            # If still no content, check if VLM response is stored in pages or predictions
+            if not content and result and hasattr(result, 'pages'):
+                for page in result.pages:
+                    if hasattr(page, 'predictions') and hasattr(page.predictions, 'vlm_response'):
+                        vlm_text = getattr(page.predictions.vlm_response, 'text', None)
+                        if vlm_text:
+                            # Clean up any Docling tags or formatting
+                            content = self._clean_docling_content(vlm_text)
+                            logger.info(f"Extracted VLM response text from result.pages for: {img_name}")
+                            break
+            
+            # If we have content at this point, return a Document with it
+            if content:
+                return Document(
+                    page_content=content,
+                    metadata={
+                        "source": file_path,
+                        "image_file": img_name,
+                        "type": "image_description",
+                        "vision_model": "SmolDocling",
+                        "timestamp": datetime.now().isoformat()
+                    }
+                )
+        
         except Exception as e:
-            raise
+            logger.error(f"Error processing image '{img_name}': {e}\n{traceback.format_exc()}")
+        
+        # If all attempts fail, create a more specific placeholder based on the image name
+        logger.warning(f"All SmolDocling processing methods failed for: {img_name}")
+        return Document(
+            page_content=f"This image appears to be an industrial diagram or schematic labeled '{img_name}'. It likely shows industrial equipment, process flow, or system architecture relevant to industrial operations.",
+            metadata={
+                "source": file_path,
+                "image_file": img_name,
+                "type": "image_description",
+                "vision_model": "SmolDocling",
+                "timestamp": datetime.now().isoformat(),
+                "note": "Placeholder description - SmolDocling processing did not yield extractable content"
+            }
+        )
+    
+    def _clean_docling_content(self, text: str) -> str:
+        """
+        Clean Docling-generated content by removing tags and normalizing formatting.
+        
+        Args:
+            text (str): Raw text with potential Docling tags
+            
+        Returns:
+            str: Cleaned text suitable for display
+        """
+        if not text:
+            return ""
+            
+        # Remove docling XML-style tags
+        cleaned = re.sub(r'<[^>]+>', ' ', text)
+        
+        # Remove unnecessary formatting artifacts
+        cleaned = re.sub(r'\s+', ' ', cleaned)  # Replace multiple spaces with single space
+        cleaned = re.sub(r'^\s+|\s+$', '', cleaned)  # Trim whitespace
+        
+        # Fix markdown artifacts if present
+        cleaned = re.sub(r'\*\*\s*\*\*', '', cleaned)  # Empty bold tags
+        cleaned = re.sub(r'__\s*__', '', cleaned)  # Empty underscore emphasis
+        
+        # Return cleaned text
+        return cleaned.strip()

@@ -9,7 +9,7 @@ from PIL import Image
 import gradio as gr
 
 from idoca.config import (
-    DEFAULT_EMBEDDING_MODEL, DEFAULT_VISION_MODEL, DEFAULT_LLM_MODEL, 
+    DEFAULT_EMBEDDING_MODEL, DEFAULT_LLM_MODEL, 
     DEFAULT_VECTOR_DB_TYPE, DEFAULT_CHROMA_PERSIST_DIR, DEFAULT_FAISS_SAVE_PATH,
     DEFAULT_FAISS_INDEX_NAME, DEFAULT_MILVUS_HOST, DEFAULT_MILVUS_PORT,
     DEFAULT_MILVUS_COLLECTION, DEFAULT_MILVUS_DROP_OLD,
@@ -18,7 +18,7 @@ from idoca.config import (
 from idoca.data_processor import DataProcessor
 from idoca.rag import RAGSystem
 from idoca.agent import IndustrialAgent
-from idoca.utils import format_chatbot_message, get_ollama_models, filter_vision_models, filter_embedding_models
+from idoca.utils import format_chatbot_message, get_ollama_models, filter_embedding_models
 
 logger = logging.getLogger("idoca.interface")
 
@@ -30,15 +30,12 @@ def create_interface():
     ollama_models = get_ollama_models()
     
     # Filter models (best effort)
-    vision_models = filter_vision_models(ollama_models)
     embedding_models = filter_embedding_models(ollama_models)
 
     # Ensure we have the default models in the lists
     if DEFAULT_EMBEDDING_MODEL not in embedding_models:
         embedding_models = [DEFAULT_EMBEDDING_MODEL] + embedding_models
     
-    if DEFAULT_VISION_MODEL not in vision_models:
-        vision_models = [DEFAULT_VISION_MODEL] + vision_models
     
     if DEFAULT_LLM_MODEL not in ollama_models:
         ollama_models = [DEFAULT_LLM_MODEL] + ollama_models
@@ -89,18 +86,14 @@ def create_interface():
                             value=DEFAULT_EMBEDDING_MODEL, 
                             label="Embedding"
                         )
-                        vision_model_dd = gr.Dropdown(
-                            choices=vision_models, 
-                            value=DEFAULT_VISION_MODEL, 
-                            label="Vision"
-                        )
+
                         llm_model_dd = gr.Dropdown(
                             choices=ollama_models, 
                             value=DEFAULT_LLM_MODEL, 
                             label="LLM (RAG & Agent)"
                         )
                         
-                        # Add Vector Database selection
+                        # Vector Database Configuration with Tabs
                         gr.Markdown("#### **Vector Database Configuration**")
                         vector_db_dd = gr.Dropdown(
                             choices=["chroma", "faiss", "milvus"], 
@@ -108,48 +101,47 @@ def create_interface():
                             label="Vector Database Type"
                         )
 
-                        # ChromaDB config
-                        with gr.Group(visible=True) as chroma_config:
-                            chroma_persist_dir = gr.Textbox(
-                                value=DEFAULT_CHROMA_PERSIST_DIR, 
-                                label="ChromaDB Persistence Directory (optional)",
-                                placeholder="Leave blank for in-memory database"
-                            )
+                        # Create tabbed interface for vector database configs
+                        with gr.Tabs() as vector_db_config_tabs:
+                            with gr.Tab("Chroma", id="chroma_tab") as chroma_tab:
+                                chroma_persist_dir = gr.Textbox(
+                                    value=DEFAULT_CHROMA_PERSIST_DIR, 
+                                    label="ChromaDB Persistence Directory (optional)",
+                                    placeholder="Leave blank for in-memory database"
+                                )
 
-                        # FAISS config 
-                        with gr.Group(visible=False) as faiss_config:
-                            faiss_save_path = gr.Textbox(
-                                value=DEFAULT_FAISS_SAVE_PATH, 
-                                label="FAISS Save Directory",
-                                placeholder="Directory to save FAISS indexes"
-                            )
-                            faiss_index_name = gr.Textbox(
-                                value=DEFAULT_FAISS_INDEX_NAME, 
-                                label="FAISS Index Name",
-                                placeholder="Name for the saved index"
-                            )
+                            with gr.Tab("FAISS", id="faiss_tab") as faiss_tab:
+                                faiss_save_path = gr.Textbox(
+                                    value=DEFAULT_FAISS_SAVE_PATH, 
+                                    label="FAISS Save Directory",
+                                    placeholder="Directory to save FAISS indexes"
+                                )
+                                faiss_index_name = gr.Textbox(
+                                    value=DEFAULT_FAISS_INDEX_NAME, 
+                                    label="FAISS Index Name",
+                                    placeholder="Name for the saved index"
+                                )
 
-                        # Milvus config
-                        with gr.Group(visible=False) as milvus_config:
-                            milvus_host = gr.Textbox(
-                                value=DEFAULT_MILVUS_HOST, 
-                                label="Milvus Host",
-                                placeholder="localhost"
-                            )
-                            milvus_port = gr.Textbox(
-                                value=DEFAULT_MILVUS_PORT, 
-                                label="Milvus Port",
-                                placeholder="19530"
-                            )
-                            milvus_collection = gr.Textbox(
-                                value=DEFAULT_MILVUS_COLLECTION, 
-                                label="Milvus Collection Name",
-                                placeholder="industrial_docs"
-                            )
-                            milvus_drop_old = gr.Checkbox(
-                                value=DEFAULT_MILVUS_DROP_OLD, 
-                                label="Drop Existing Collection"
-                            )
+                            with gr.Tab("Milvus", id="milvus_tab") as milvus_tab:
+                                milvus_host = gr.Textbox(
+                                    value=DEFAULT_MILVUS_HOST, 
+                                    label="Milvus Host",
+                                    placeholder="localhost"
+                                )
+                                milvus_port = gr.Textbox(
+                                    value=DEFAULT_MILVUS_PORT, 
+                                    label="Milvus Port",
+                                    placeholder="19530"
+                                )
+                                milvus_collection = gr.Textbox(
+                                    value=DEFAULT_MILVUS_COLLECTION, 
+                                    label="Milvus Collection Name",
+                                    placeholder="industrial_docs"
+                                )
+                                milvus_drop_old = gr.Checkbox(
+                                    value=DEFAULT_MILVUS_DROP_OLD, 
+                                    label="Drop Existing Collection"
+                                )
                         
                         gr.Markdown("---")  # Separator
                         gr.Markdown("#### **Step 3:** Process Uploaded Files")
@@ -240,10 +232,27 @@ def create_interface():
                 )
                 gr.Markdown("**Agent Tools:** Knowledge Base Query, General Search, Numerical Analysis")
 
+        # Function to update the active tab based on vector database selection
+        def update_active_db_tab(db_type):
+            tab_id = ""
+            if db_type == "chroma":
+                tab_id = "chroma_tab"
+            elif db_type == "faiss":
+                tab_id = "faiss_tab"
+            elif db_type == "milvus":
+                tab_id = "milvus_tab"
+            return gr.update(selected=tab_id)
+
+        # Wire up the vector DB dropdown to control tab selection
+        vector_db_dd.change(
+            fn=update_active_db_tab,
+            inputs=[vector_db_dd],
+            outputs=[vector_db_config_tabs]
+        )
+
         # Handler functions
         def handle_process_files(
             files_list, 
-            vision_model: str, 
             current_session_processed_paths_set: Optional[Set[str]]
         ) -> tuple:
             """Process uploaded files and prepare them for RAG."""
@@ -293,7 +302,7 @@ def create_interface():
                     # Process image files
                     elif file_extension in ['.jpg', '.jpeg', '.png']:
                         file_type_display = "Img"
-                        image_document = data_processor.process_image_file(temp_file_path, vision_model)
+                        image_document = data_processor.process_image_file(temp_file_path)
                         newly_docs_for_rag_buffer.append(image_document)
                         details_text, status_symbol = "Description OK", "✅"
                         try:
@@ -413,8 +422,9 @@ def create_interface():
                     rag_instance = None
             except Exception as e:
                 status_lines.append(f"❌ RAG Setup Error: {e}")
-                logger.error(traceback.format_exc())
+                logger.error(f"RAG Setup Error: {e}")
                 rag_instance = None
+            
             # Initialize agent if RAG is available
             if rag_instance:
                 try:
@@ -426,7 +436,7 @@ def create_interface():
                         status_lines.append("⚠️ Agent graph compilation failed.")
                 except Exception as e:
                     status_lines.append(f"❌ Agent Init Error: {e}")
-                    logger.error(traceback.format_exc())
+                    logger.error(f"Agent Init Error: {e}")
                     agent_instance = None
             else:
                 agent_instance = None
@@ -509,7 +519,7 @@ def create_interface():
                 yield new_history
                 
             except Exception as e:
-                logger.error(f"ERROR simple_rag_chat_fn: {e}\n{traceback.format_exc()}")
+                logger.error(f"ERROR simple_rag_chat_fn: {e}")
                 error_message = format_chatbot_message("assistant", f"❌ Unexpected Error: {e}")
                 new_history[-1] = error_message  # Replace thinking message with error
                 yield new_history
@@ -582,7 +592,7 @@ def create_interface():
                             accumulated_text_for_current_bubble = content
                     
                     yield new_history  # Show updated state
-                
+
                 # After stream finishes, provide a concluding message if needed
                 if not stream_produced_output:
                     new_history[-1] = format_chatbot_message(
@@ -607,7 +617,7 @@ def create_interface():
                 yield new_history
                 
             except Exception as e:
-                logger.error(f"ERROR agent_chat_fn: {e}\n{traceback.format_exc()}")
+                logger.error(f"ERROR agent_chat_fn: {e}")
                 error_message = format_chatbot_message("assistant", f"❌ Agent Error: {e}")
                 
                 # Replace the thinking message or append error if we're beyond that point
@@ -619,25 +629,13 @@ def create_interface():
                 yield new_history
 
 
-        # Add Vector DB dropdown change handler to show/hide config panels
-        vector_db_dd.change(
-            fn=lambda db_type: (
-                db_type == "chroma",  # ChromaDB visibility
-                db_type == "faiss",   # FAISS visibility
-                db_type == "milvus"   # Milvus visibility
-            ),
-            inputs=[vector_db_dd],
-            outputs=[chroma_config, faiss_config, milvus_config]
-        )
-
         # Setup event listeners
         process_btn.click(
             fn=handle_process_files, 
-            inputs=[unified_file_input, vision_model_dd, session_processed_paths_s],
+            inputs=[unified_file_input, session_processed_paths_s],
             outputs=[global_status_out, doc_df, img_prev_out, img_desc_out, npd_s, session_processed_paths_s]
         )
 
-        # Update the init_btn.click event to include vector DB parameters
         init_btn.click(
             fn=handle_initialize_systems,
             inputs=[
